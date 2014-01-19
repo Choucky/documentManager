@@ -1,4 +1,4 @@
-package documentManager;
+package com.documentmanager.models;
 
 public enum Etoile {
 	uneEtoile(1),
