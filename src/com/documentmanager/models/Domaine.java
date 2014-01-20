@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Domaine {
 	String nom;
-	List<CategorieMotClef> categories;
+	ArrayList<CategorieMotClef> categories;
+	ArrayList<Critere> criteres;
 	
 	public Domaine(String nom) {
 		this.nom = nom;
