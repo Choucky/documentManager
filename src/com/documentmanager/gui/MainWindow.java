@@ -177,6 +177,12 @@ public class MainWindow {
 					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, le domaine ne sera PAS créé.");
 					return;
 				}
+				for (Domaine d : domaines) {
+					if (d.getNom().equals(nomDomaine)) {
+						javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Le domaine existe déja. Il ne sera pas créé.");
+						return;
+					}
+				}
 				domaines.add(new Domaine(nomDomaine));
 				updateDomainlist();
 			}
