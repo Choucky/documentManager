@@ -98,6 +98,11 @@ public class MainWindow {
 		frmDocumentmanager.setBounds(100, 100, 800, 600);
 		frmDocumentmanager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDocumentmanager.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmDocumentmanager.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt){
+               //TODO
+            }
+        });
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Mot clefs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
