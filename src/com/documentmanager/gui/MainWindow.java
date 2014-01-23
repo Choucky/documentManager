@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.SpringLayout;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
@@ -26,10 +27,43 @@ import java.awt.event.InputEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.AbstractListModel;
 import javax.swing.JTree;
+import javax.swing.border.TitledBorder;
+import javax.swing.JScrollBar;
+import java.awt.GridLayout;
+import javax.swing.JCheckBox;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Rectangle;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.BoxLayout;
+import javax.swing.JSplitPane;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.util.ArrayList;
+
+import com.documentmanager.models.Domaine;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 
 public class MainWindow {
 
 	private JFrame frmDocumentmanager;
+	
+	//Données applicatives
+	ArrayList<Domaine> domaines;
+	private JLabel txtDomaine;
 
 	/**
 	 * Launch the application.
@@ -71,15 +105,41 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		domaines = new ArrayList<Domaine>();
+		
 		frmDocumentmanager = new JFrame();
 		frmDocumentmanager.setTitle("Document Manager");
-		frmDocumentmanager.setBounds(100, 100, 450, 300);
+		frmDocumentmanager.setBounds(100, 100, 800, 600);
 		frmDocumentmanager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDocumentmanager.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Machin", "Truc", "Bidule", "Chouette", "Chose"};
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Mot clefs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panelMotClefs = new JPanel();
+		
+		JScrollPane scrollPane_1 = new JScrollPane(panelMotClefs);
+		GridBagLayout gbl_panelMotClefs = new GridBagLayout();
+		gbl_panelMotClefs.columnWidths = new int[]{0, 0};
+		gbl_panelMotClefs.rowHeights = new int[] {30, 0};
+		gbl_panelMotClefs.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panelMotClefs.rowWeights = new double[]{0.0, 0.0};
+		panelMotClefs.setLayout(gbl_panelMotClefs);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		panel.add(scrollPane_1, BorderLayout.CENTER);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		frmDocumentmanager.getContentPane().add(panel_3, BorderLayout.WEST);
+		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
+		
+		JList listeFichiers = new JList();
+		listeFichiers.setPreferredSize(new Dimension(250, 0));
+		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listeFichiers.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Fichier1", "Fichier2", "Fichier3", "Fichier4", "Fichier5"};
 			public int getSize() {
 				return values.length;
 			}
@@ -87,10 +147,30 @@ public class MainWindow {
 				return values[index];
 			}
 		});
-		frmDocumentmanager.getContentPane().add(list, BorderLayout.WEST);
 		
-		JTree tree = new JTree();
-		frmDocumentmanager.getContentPane().add(tree, BorderLayout.EAST);
+		JScrollPane scrollPane = new JScrollPane(listeFichiers);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		panel_3.add(scrollPane);
+		
+		JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		frmDocumentmanager.getContentPane().add(toolBar, BorderLayout.NORTH);
+		
+		JPanel panel_1 = new JPanel();
+		toolBar.add(panel_1);
+		panel_1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		
+		txtDomaine = new JLabel();
+		txtDomaine.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDomaine.setPreferredSize(new Dimension(75, 24));
+		txtDomaine.setMinimumSize(new Dimension(75, 24));
+		panel_1.add(txtDomaine);
+		txtDomaine.setText("Domaine :");
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setPreferredSize(new Dimension(200, 24));
+		comboBox.setMinimumSize(new Dimension(200, 24));
+		panel_1.add(comboBox);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);
@@ -99,6 +179,16 @@ public class MainWindow {
 		menuBar.add(mnDomaine);
 		
 		JMenuItem mntmNouveau = new JMenuItem("Nouveau...");
+		mntmNouveau.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String nomDomaine = JOptionPane.showInputDialog("Veuillez indiquer le nom du domaine :");
+				if (nomDomaine.equals("")) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, le domaine ne sera PAS créé.");
+					return;
+				}
+				domaines.add(new Domaine(nomDomaine));
+			}
+		});
 		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		mnDomaine.add(mntmNouveau);
 		
@@ -128,6 +218,18 @@ public class MainWindow {
 		
 		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
 		mnNouveau.add(mntmDocumentPapier);
+		
+		JMenuItem mntmSupprimerUnDocument = new JMenuItem("Supprimer un document...");
+		mnFichiers.add(mntmSupprimerUnDocument);
+		
+		JMenu mnMotClefs = new JMenu("Mot clefs");
+		menuBar.add(mnMotClefs);
+		
+		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
+		mnMotClefs.add(mntmNouveauMotClef);
+		
+		JMenuItem mntmSupprimerUnMot = new JMenuItem("Supprimer un mot clef...");
+		mnMotClefs.add(mntmSupprimerUnMot);
 	}
 
 }

@@ -3,8 +3,8 @@ package com.documentmanager.models;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Document {
+public abstract class Document {
 	private String titre;
 	private ArrayList<CategorieMotClef> categories;
-	private Map<Critere, Note> notesMap;
+	private ArrayList<Note> note;
 }
