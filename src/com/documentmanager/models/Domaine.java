@@ -12,5 +12,9 @@ public class Domaine {
 		this.nom = nom;
 		categories = new ArrayList<CategorieMotClef>();
 	}
+
+	public String getNom() {
+		return nom;
+	}
 	
 }

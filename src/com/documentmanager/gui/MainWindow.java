@@ -14,6 +14,8 @@ import javax.swing.SpringLayout;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JToolBar;
@@ -26,40 +28,24 @@ import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.AbstractListModel;
-import javax.swing.JTree;
 import javax.swing.border.TitledBorder;
-import javax.swing.JScrollBar;
-import java.awt.GridLayout;
-import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.Rectangle;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
-import javax.swing.JSplitPane;
 import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.util.ArrayList;
 
 import com.documentmanager.models.Domaine;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
 public class MainWindow {
 
 	private JFrame frmDocumentmanager;
+	
+	//Composants
+	private JComboBox comboBox;
 	
 	//Données applicatives
 	ArrayList<Domaine> domaines;
@@ -167,7 +153,7 @@ public class MainWindow {
 		panel_1.add(txtDomaine);
 		txtDomaine.setText("Domaine :");
 		
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox();
 		comboBox.setPreferredSize(new Dimension(200, 24));
 		comboBox.setMinimumSize(new Dimension(200, 24));
 		panel_1.add(comboBox);
@@ -187,6 +173,7 @@ public class MainWindow {
 					return;
 				}
 				domaines.add(new Domaine(nomDomaine));
+				updateDomainlist();
 			}
 		});
 		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -230,6 +217,13 @@ public class MainWindow {
 		
 		JMenuItem mntmSupprimerUnMot = new JMenuItem("Supprimer un mot clef...");
 		mnMotClefs.add(mntmSupprimerUnMot);
+	}
+	
+	private void updateDomainlist() {
+		comboBox.removeAllItems();
+		for (Domaine d : domaines) {
+			comboBox.addItem(d.getNom());
+		}
 	}
 
 }
