@@ -154,7 +154,7 @@ public class MainWindow {
 				JComboBox cb = (JComboBox)arg0.getSource();
 		        String domaine_selection = (String)cb.getSelectedItem();
 		        if (domaine != null) {
-		        	saveDomain(domaine);
+		        	saveDomain();
 		        }
 		        loadDomain(domaine_selection);
 			}
@@ -232,7 +232,7 @@ public class MainWindow {
 				}
 				domaine = new Domaine(nomDomaine);
 				domaines.add(domaine.getNom());
-				saveDomain(domaine);
+				saveDomain();
 				updateDomainlist();
 			}
 		});
@@ -270,6 +270,20 @@ public class MainWindow {
 
 		JMenu mnMotClefs = new JMenu("Mot clefs");
 		menuBar.add(mnMotClefs);
+		
+		JMenuItem mntmNouvelleCatgorieDe = new JMenuItem("Nouvelle catégorie de mot clef...");
+		mntmNouvelleCatgorieDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String catMotClef = JOptionPane.showInputDialog("Veuillez indiquer le nom de la catégorie de mot clef :");
+				if (catMotClef.equals("")) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, la catégorie ne sera PAS créé.");
+					return;
+				}
+				domaine.addCategorieMotClef(catMotClef);
+				saveDomain();
+			}
+		});
+		mnMotClefs.add(mntmNouvelleCatgorieDe);
 
 		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
 		mnMotClefs.add(mntmNouveauMotClef);
@@ -299,10 +313,10 @@ public class MainWindow {
 		}
 	}
 
-	private void saveDomain(Domaine d) {
+	private void saveDomain() {
 		try {
-			ObjectOutputStream output_domain = new ObjectOutputStream(new FileOutputStream(d.getNom()+".bin"));
-			output_domain.writeObject(d);
+			ObjectOutputStream output_domain = new ObjectOutputStream(new FileOutputStream(domaine.getNom()+".bin"));
+			output_domain.writeObject(domaine);
 			output_domain.flush();
 			output_domain.close();
 		} catch (FileNotFoundException e) {

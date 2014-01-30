@@ -18,4 +18,8 @@ public class Domaine implements Serializable{
 		return nom;
 	}
 	
+	public void addCategorieMotClef(String nomCategorie) {
+		categories.add(new CategorieMotClef(nomCategorie));
+	}
+	
 }
