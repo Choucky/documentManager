@@ -5,12 +5,16 @@ import java.util.ArrayList;
 
 public class CategorieMotClef implements Serializable{
 	
-	String nom;
-	ArrayList<MotClef> motClefs;
+	private String nom;
+	private ArrayList<MotClef> motClefs;
 	
 	public CategorieMotClef(String nomCategorie) {
 		nom = nomCategorie;
 		motClefs = new ArrayList<MotClef>();
+	}
+
+	public String getNom() {
+		return nom;
 	}
 	
 }

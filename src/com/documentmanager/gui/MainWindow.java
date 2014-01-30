@@ -34,6 +34,7 @@ import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.Domaine;
+import com.documentmanager.models.MotClef;
 
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
@@ -45,13 +46,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.awt.Component;
 
 public class MainWindow {
 
 	private JFrame frmDocumentmanager;
 
 	//Composants
-	private JComboBox comboBox;
+	private JComboBox domainesComboBox;
+	private JComboBox motClefCatList;
 
 	//Données applicatives
 	ArrayList<String> domaines;
@@ -148,8 +151,8 @@ public class MainWindow {
 		panel_1.add(txtDomaine);
 		txtDomaine.setText("Domaine :");
 
-		comboBox = new JComboBox();
-		comboBox.addActionListener(new ActionListener() {
+		domainesComboBox = new JComboBox();
+		domainesComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JComboBox cb = (JComboBox)arg0.getSource();
 		        String domaine_selection = (String)cb.getSelectedItem();
@@ -159,16 +162,16 @@ public class MainWindow {
 		        loadDomain(domaine_selection);
 			}
 		});
-		comboBox.setPreferredSize(new Dimension(200, 24));
-		comboBox.setMinimumSize(new Dimension(200, 24));
+		domainesComboBox.setPreferredSize(new Dimension(200, 24));
+		domainesComboBox.setMinimumSize(new Dimension(200, 24));
 		
 		//Trouver les domaines
 		File[] files = findDomains();
 		for (File f : files) {
-			comboBox.addItem(f.getName().replace(".bin", ""));
+			domainesComboBox.addItem(f.getName().replace(".bin", ""));
 		}
 		
-		panel_1.add(comboBox);
+		panel_1.add(domainesComboBox);
 
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(200, 10));
@@ -176,39 +179,70 @@ public class MainWindow {
 		panel.setMinimumSize(new Dimension(200, 10));
 		panel.setBorder(new TitledBorder(null, "Recherche", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		panel.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
-		flowLayout.setVgap(0);
+		panel_2.setBounds(5, 20, 190, 61);
 		panel_2.setBorder(new TitledBorder(null, "Ajouter un crit\u00E8re", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_2);
+		panel_2.setLayout(null);
 
 		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(8, 20, 125, 24);
 		comboBox_1.setPreferredSize(new Dimension(125, 24));
 		comboBox_1.setMinimumSize(new Dimension(125, 24));
 		panel_2.add(comboBox_1);
 
 		JButton button = new JButton("+");
+		button.setBounds(138, 20, 44, 25);
 		panel_2.add(button);
 
 		JPanel panel_4 = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panel_4.getLayout();
-		flowLayout_1.setVgap(0);
+		panel_4.setBounds(5, 82, 190, 87);
 		panel_4.setBorder(new TitledBorder(null, "Ajouter un mot clef", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_4);
+		panel_4.setLayout(null);
 
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setPreferredSize(new Dimension(125, 24));
-		comboBox_2.setMinimumSize(new Dimension(125, 24));
-		panel_4.add(comboBox_2);
-
-		JButton button_1 = new JButton("+");
-		panel_4.add(button_1);
+		motClefCatList = new JComboBox();
+		motClefCatList.setBounds(12, 24, 170, 24);
+		motClefCatList.setPreferredSize(new Dimension(125, 24));
+		motClefCatList.setMinimumSize(new Dimension(125, 24));
+		panel_4.add(motClefCatList);
+		
+		JComboBox comboBox_3 = new JComboBox();
+		comboBox_3.setBounds(12, 51, 125, 24);
+		comboBox_3.setPreferredSize(new Dimension(125, 24));
+		comboBox_3.setMinimumSize(new Dimension(125, 24));
+		panel_4.add(comboBox_3);
+		
+		JButton button_2 = new JButton("+");
+		button_2.setBounds(138, 51, 44, 25);
+		panel_4.add(button_2);
 
 		JPanel panel_5 = new JPanel();
+		panel_5.setBounds(5, 170, 190, 315);
 		panel_5.setBorder(new TitledBorder(null, "Filtres actuels", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_5);
+		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
+		
+		JList listeCriteres = new JList();
+		listeCriteres.setPreferredSize(new Dimension(250, 0));
+		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listeCriteres.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Fichier1", "Fichier2", "Fichier3", "Fichier4", "Fichier5"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		
+		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		panel_5.add(scrollPane_1);
+		
+		scrollPane_1.add(listeCriteres);
 
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);
@@ -285,6 +319,7 @@ public class MainWindow {
 					return;
 				}
 				domaine.addCategorieMotClef(catMotClef);
+				updateMotClefCatList();
 				saveDomain();
 			}
 		});
@@ -294,10 +329,17 @@ public class MainWindow {
 		mnMotClefs.add(mntmNouveauMotClef);
 	}
 
+	protected void updateMotClefCatList() {
+		motClefCatList.removeAllItems();
+		for (String d : domaine.getCategoriesMotClef()) {
+			motClefCatList.addItem(d);
+		}
+	}
+
 	private void updateDomainlist() {
-		comboBox.removeAllItems();
+		domainesComboBox.removeAllItems();
 		for (String d : domaines) {
-			comboBox.addItem(d);
+			domainesComboBox.addItem(d);
 		}
 	}
 	
@@ -316,6 +358,8 @@ public class MainWindow {
 			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Données incompatibles : " + e.getMessage());
 			e.printStackTrace();
 		}
+		
+		//TODO : Rafraichir les contrôles
 	}
 
 	private void saveDomain() {

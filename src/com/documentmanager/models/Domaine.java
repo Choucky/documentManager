@@ -22,4 +22,12 @@ public class Domaine implements Serializable{
 		categories.add(new CategorieMotClef(nomCategorie));
 	}
 	
+	public String[] getCategoriesMotClef() {
+		String[] result = new String[categories.size()];
+		for (int i=0;i<categories.size();i++) {
+			result[i] = categories.get(i).getNom();
+		}
+		return result;
+	}
+	
 }
