@@ -10,9 +10,6 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.SpringLayout;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -34,11 +31,11 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
-import java.awt.GridBagLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.Domaine;
 import javax.swing.JComboBox;
+import java.awt.GridLayout;
 
 public class MainWindow {
 
@@ -104,23 +101,6 @@ public class MainWindow {
             }
         });
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Mot clefs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panelMotClefs = new JPanel();
-		
-		JScrollPane scrollPane_1 = new JScrollPane(panelMotClefs);
-		GridBagLayout gbl_panelMotClefs = new GridBagLayout();
-		gbl_panelMotClefs.columnWidths = new int[]{0, 0};
-		gbl_panelMotClefs.rowHeights = new int[] {30, 0};
-		gbl_panelMotClefs.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panelMotClefs.rowWeights = new double[]{0.0, 0.0};
-		panelMotClefs.setLayout(gbl_panelMotClefs);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		panel.add(scrollPane_1, BorderLayout.CENTER);
-		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frmDocumentmanager.getContentPane().add(panel_3, BorderLayout.WEST);
@@ -163,6 +143,46 @@ public class MainWindow {
 		comboBox.setMinimumSize(new Dimension(200, 24));
 		panel_1.add(comboBox);
 		
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(200, 10));
+		panel.setSize(new Dimension(200, 0));
+		panel.setMinimumSize(new Dimension(200, 10));
+		panel.setBorder(new TitledBorder(null, "Recherche", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+		flowLayout.setVgap(0);
+		panel_2.setBorder(new TitledBorder(null, "Ajouter un crit\u00E8re", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(panel_2);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setPreferredSize(new Dimension(125, 24));
+		comboBox_1.setMinimumSize(new Dimension(125, 24));
+		panel_2.add(comboBox_1);
+		
+		JButton button = new JButton("+");
+		panel_2.add(button);
+		
+		JPanel panel_4 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_4.getLayout();
+		flowLayout_1.setVgap(0);
+		panel_4.setBorder(new TitledBorder(null, "Ajouter un mot clef", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(panel_4);
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setPreferredSize(new Dimension(125, 24));
+		comboBox_2.setMinimumSize(new Dimension(125, 24));
+		panel_4.add(comboBox_2);
+		
+		JButton button_1 = new JButton("+");
+		panel_4.add(button_1);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.setBorder(new TitledBorder(null, "Filtres actuels", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.add(panel_5);
+		
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);
 		
@@ -190,14 +210,6 @@ public class MainWindow {
 		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		mnDomaine.add(mntmNouveau);
 		
-		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir...");
-		mntmOuvrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
-		mnDomaine.add(mntmOuvrir);
-		
-		JMenuItem mntmFermer = new JMenuItem("Fermer");
-		mntmFermer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
-		mnDomaine.add(mntmFermer);
-		
 		JSeparator separator = new JSeparator();
 		mnDomaine.add(separator);
 		
@@ -217,17 +229,11 @@ public class MainWindow {
 		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
 		mnNouveau.add(mntmDocumentPapier);
 		
-		JMenuItem mntmSupprimerUnDocument = new JMenuItem("Supprimer un document...");
-		mnFichiers.add(mntmSupprimerUnDocument);
-		
 		JMenu mnMotClefs = new JMenu("Mot clefs");
 		menuBar.add(mnMotClefs);
 		
 		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
 		mnMotClefs.add(mntmNouveauMotClef);
-		
-		JMenuItem mntmSupprimerUnMot = new JMenuItem("Supprimer un mot clef...");
-		mnMotClefs.add(mntmSupprimerUnMot);
 	}
 	
 	private void updateDomainlist() {
