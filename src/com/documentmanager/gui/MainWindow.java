@@ -34,7 +34,6 @@ import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.Domaine;
-import com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument;
 
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
@@ -254,6 +253,12 @@ public class MainWindow {
 		mnFichiers.add(mnNouveau);
 
 		JMenuItem mntmDocumentElectronique = new JMenuItem("Document electronique...");
+		mntmDocumentElectronique.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				NewFileDialog nfd = new NewFileDialog();
+				nfd.setVisible(true);
+			}
+		});
 		mnNouveau.add(mntmDocumentElectronique);
 
 		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
