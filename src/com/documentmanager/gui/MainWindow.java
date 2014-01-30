@@ -356,6 +356,8 @@ public class MainWindow {
 				amcd.setVisible(true);
 				if (amcd.getResult() == FileDialogResultEnum.ok) {
 					domaine.addMotClef(amcd.getCategorieMotClef(), amcd.getMotClef());
+					// HACK : on force le rafraichissement de la liste
+					motClefCatList.setSelectedIndex(motClefCatList.getSelectedIndex());
 				}
 			}
 		});
