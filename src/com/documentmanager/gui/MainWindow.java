@@ -107,11 +107,11 @@ public class MainWindow {
 		frmDocumentmanager = new JFrame();
 		frmDocumentmanager.setTitle("Document Manager");
 		frmDocumentmanager.setBounds(100, 100, 800, 600);
-		frmDocumentmanager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDocumentmanager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmDocumentmanager.getContentPane().setLayout(new BorderLayout(0, 0));
 		frmDocumentmanager.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosed(java.awt.event.WindowEvent evt){
-				//TODO
+				finish();
 			}
 		});
 
@@ -121,6 +121,7 @@ public class MainWindow {
 		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
 
 		JList listeFichiers = new JList();
+		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
 		listeFichiers.setPreferredSize(new Dimension(250, 0));
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listeFichiers.setModel(new AbstractListModel() {
@@ -208,17 +209,28 @@ public class MainWindow {
 		panel.add(panel_4);
 		panel_4.setLayout(null);
 
+		final JComboBox motClefList = new JComboBox();
+		motClefList.setBounds(12, 51, 125, 24);
+		motClefList.setPreferredSize(new Dimension(125, 24));
+		motClefList.setMinimumSize(new Dimension(125, 24));
+		panel_4.add(motClefList);
+		
 		motClefCatList = new JComboBox();
+		motClefCatList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				motClefList.removeAllItems();
+				if (motClefCatList.getSelectedItem() == null) {
+					return;
+				}
+				for (String s : domaine.getMotClefOf(motClefCatList.getSelectedItem())) {
+					motClefList.addItem(s);
+				}
+			}
+		});
 		motClefCatList.setBounds(12, 24, 170, 24);
 		motClefCatList.setPreferredSize(new Dimension(125, 24));
 		motClefCatList.setMinimumSize(new Dimension(125, 24));
 		panel_4.add(motClefCatList);
-		
-		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(12, 51, 125, 24);
-		comboBox_3.setPreferredSize(new Dimension(125, 24));
-		comboBox_3.setMinimumSize(new Dimension(125, 24));
-		panel_4.add(comboBox_3);
 		
 		JButton button_2 = new JButton("+");
 		button_2.setBounds(138, 51, 44, 25);
@@ -244,6 +256,7 @@ public class MainWindow {
 		});
 		
 		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
+		scrollPane_1.setToolTipText("Double cliquez sur un filtre pour le supprimer.");
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		panel_5.add(scrollPane_1);
 		
@@ -286,7 +299,7 @@ public class MainWindow {
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
 		mntmQuitter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MainWindow.this.frmDocumentmanager.dispose();
+				finish();
 			}
 		});
 		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
@@ -333,6 +346,19 @@ public class MainWindow {
 		mnMotClefs.add(mntmNouvelleCatgorieDe);
 
 		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
+		mntmNouveauMotClef.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!domaine.hasCategories()) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
+					return;
+				}
+				AjoutMotClefDialog amcd = new AjoutMotClefDialog(domaine.getCategoriesMotClef());
+				amcd.setVisible(true);
+				if (amcd.getResult() == FileDialogResultEnum.ok) {
+					domaine.addMotClef(amcd.getCategorieMotClef(), amcd.getMotClef());
+				}
+			}
+		});
 		mnMotClefs.add(mntmNouveauMotClef);
 		
 		ready = true;
@@ -382,6 +408,9 @@ public class MainWindow {
 	}
 
 	private void saveDomain() {
+		if (domaine == null) {
+			return;
+		}
 		try {
 			ObjectOutputStream output_domain = new ObjectOutputStream(new FileOutputStream(domaine.getNom()+".bin"));
 			output_domain.writeObject(domaine);
@@ -403,6 +432,12 @@ public class MainWindow {
 		        return name.endsWith(".bin");
 		    }
 		});
+	}
+	
+	private void finish() {
+		saveDomain();
+		frmDocumentmanager.dispose();
+		System.exit(0);
 	}
 
 }

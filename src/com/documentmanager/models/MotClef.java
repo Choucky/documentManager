@@ -4,6 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MotClef implements Serializable{
-	String libelle;
+	
+	String motClef;
 	ArrayList<Document> documents;
+	
+	public MotClef(String motClef) {
+		this.motClef = motClef;
+		documents = new ArrayList<Document>();
+	}
+
+	public String getMotClef() {
+		return motClef;
+	}
 }

@@ -16,5 +16,17 @@ public class CategorieMotClef implements Serializable{
 	public String getNom() {
 		return nom;
 	}
+
+	public void addMotClef(String motClef) {
+		motClefs.add(new MotClef(motClef));
+	}
+
+	public String[] getMotClefs() {
+		String[] result = new String[motClefs.size()];
+		for (int i=0; i<motClefs.size();i++) {
+			result[i] = motClefs.get(i).getMotClef();
+		}
+		return result;
+	}
 	
 }

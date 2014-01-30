@@ -30,4 +30,25 @@ public class Domaine implements Serializable{
 		return result;
 	}
 	
+	public boolean hasCategories() {
+		return categories.size() > 0;
+	}
+
+	public void addMotClef(String categorieMotClef, String motClef) {
+		findCategoryFromString(categorieMotClef).addMotClef(motClef);
+	}
+	
+	private CategorieMotClef findCategoryFromString(String categorieMotClef) {
+		for (CategorieMotClef c : categories) {
+			if (c.getNom().equals(categorieMotClef)) {
+				return c;
+			}
+		}
+		throw new IllegalArgumentException("Etonnant : la catégorie de mot clef n'existe pas !");
+	}
+
+	public String[] getMotClefOf(Object selectedItem) {
+		return findCategoryFromString(selectedItem.toString()).getMotClefs();
+	}
+	
 }
