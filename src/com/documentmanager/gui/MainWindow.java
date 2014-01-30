@@ -334,7 +334,11 @@ public class MainWindow {
 		mnMotClefs.add(mntmNouveauMotClef);
 		
 		ready = true;
-		domainesComboBox.setSelectedIndex(0);
+		try {
+			domainesComboBox.setSelectedIndex(0);
+		} catch (IllegalArgumentException e) {
+			//Rien, juste pour attraper l'exception
+		}
 	}
 
 	protected void updateMotClefCatList() {
