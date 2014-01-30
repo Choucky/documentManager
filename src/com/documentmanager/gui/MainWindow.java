@@ -34,13 +34,17 @@ import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.Domaine;
+import com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument;
+
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class MainWindow {
@@ -148,7 +152,12 @@ public class MainWindow {
 		comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				JComboBox cb = (JComboBox)arg0.getSource();
+		        String domaine_selection = (String)cb.getSelectedItem();
+		        if (domaine != null) {
+		        	saveDomain(domaine);
+		        }
+		        loadDomain(domaine_selection);
 			}
 		});
 		comboBox.setPreferredSize(new Dimension(200, 24));
@@ -261,6 +270,23 @@ public class MainWindow {
 		comboBox.removeAllItems();
 		for (String d : domaines) {
 			comboBox.addItem(d);
+		}
+	}
+	
+	private void loadDomain(String domaine_selection) {
+		try {
+			ObjectInputStream input_domain = new ObjectInputStream(new FileInputStream(domaine_selection+".bin"));
+			domaine = (Domaine) input_domain.readObject();
+			input_domain.close();
+		} catch (FileNotFoundException e) {
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Impossible de charger le domaine : " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Impossible de lire le domaine : " + e.getMessage());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Données incompatibles : " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
