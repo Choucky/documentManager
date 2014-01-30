@@ -1,6 +1,8 @@
 package com.documentmanager.models;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable{
 	Etoile note;
 	Document document;
 	Critere critere;

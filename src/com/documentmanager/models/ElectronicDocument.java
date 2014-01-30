@@ -1,5 +1,7 @@
 package com.documentmanager.models;
 
-public class ElectronicDocument extends Document {
+import java.io.Serializable;
+
+public class ElectronicDocument extends Document implements Serializable{
 	String link;
 }

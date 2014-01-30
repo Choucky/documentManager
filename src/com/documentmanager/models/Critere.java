@@ -1,5 +1,7 @@
 package com.documentmanager.models;
 
-public class Critere {
+import java.io.Serializable;
+
+public class Critere implements Serializable{
 	String nom;
 }

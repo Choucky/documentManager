@@ -1,5 +1,7 @@
 package com.documentmanager.models;
 
-public class PaperDocument extends Document {
+import java.io.Serializable;
+
+public class PaperDocument extends Document implements Serializable{
 	String commentaire;
 }

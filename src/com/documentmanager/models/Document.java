@@ -1,9 +1,9 @@
 package com.documentmanager.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 
-public abstract class Document {
+public abstract class Document implements Serializable{
 	private String titre;
 	private ArrayList<CategorieMotClef> categories;
 	private ArrayList<Note> note;
