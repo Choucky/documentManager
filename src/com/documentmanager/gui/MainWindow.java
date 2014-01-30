@@ -60,6 +60,7 @@ public class MainWindow {
 	ArrayList<String> domaines;
 	Domaine domaine;
 	private JLabel txtDomaine;
+	private boolean ready = false;
 
 	/**
 	 * Launch the application.
@@ -159,7 +160,9 @@ public class MainWindow {
 		        if (domaine != null) {
 		        	saveDomain();
 		        }
-		        loadDomain(domaine_selection);
+		        if (ready && domaine_selection != null) {
+		        	loadDomain(domaine_selection);
+		        }
 			}
 		});
 		domainesComboBox.setPreferredSize(new Dimension(200, 24));
@@ -168,7 +171,9 @@ public class MainWindow {
 		//Trouver les domaines
 		File[] files = findDomains();
 		for (File f : files) {
-			domainesComboBox.addItem(f.getName().replace(".bin", ""));
+			String domaine_nom = f.getName().replace(".bin", "");
+			domainesComboBox.addItem(domaine_nom);
+			domaines.add(domaine_nom);
 		}
 		
 		panel_1.add(domainesComboBox);
@@ -327,6 +332,9 @@ public class MainWindow {
 
 		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
 		mnMotClefs.add(mntmNouveauMotClef);
+		
+		ready = true;
+		domainesComboBox.setSelectedIndex(0);
 	}
 
 	protected void updateMotClefCatList() {
@@ -360,6 +368,7 @@ public class MainWindow {
 		}
 		
 		//TODO : Rafraichir les contrôles
+		updateMotClefCatList();
 	}
 
 	private void saveDomain() {
