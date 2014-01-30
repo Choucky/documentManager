@@ -243,6 +243,11 @@ public class MainWindow {
 		mnDomaine.add(separator);
 
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
+		mntmQuitter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MainWindow.this.frmDocumentmanager.dispose();
+			}
+		});
 		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 		mnDomaine.add(mntmQuitter);
 
