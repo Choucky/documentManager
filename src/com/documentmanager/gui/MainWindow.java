@@ -257,6 +257,10 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				NewFileDialog nfd = new NewFileDialog();
 				nfd.setVisible(true);
+				if (nfd.getResult() == FileDialogResultEnum.ok) {
+					//nfd.getFileName());
+					//TODO
+				}
 			}
 		});
 		mnNouveau.add(mntmDocumentElectronique);
