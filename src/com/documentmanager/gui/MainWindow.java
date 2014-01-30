@@ -273,6 +273,8 @@ public class MainWindow {
 				domaines.add(domaine.getNom());
 				saveDomain();
 				updateDomainlist();
+				domainesComboBox.setSelectedIndex(domainesComboBox.getItemCount() - 1);
+				updateFrameContent();
 			}
 		});
 		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -372,6 +374,10 @@ public class MainWindow {
 		}
 		
 		//TODO : Rafraichir les contrôles
+		updateFrameContent();
+	}
+	
+	private void updateFrameContent() {
 		updateMotClefCatList();
 	}
 
