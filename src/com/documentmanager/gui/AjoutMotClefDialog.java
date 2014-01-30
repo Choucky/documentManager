@@ -24,6 +24,7 @@ public class AjoutMotClefDialog extends JDialog {
 	private FileDialogResultEnum result = FileDialogResultEnum.canceled;
 
 	public AjoutMotClefDialog(String[] categories) {
+		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Ajout d'un mot clef pour une catégorie");
 		setBounds(100, 100, 486, 168);

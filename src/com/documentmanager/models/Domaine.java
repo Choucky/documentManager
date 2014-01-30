@@ -47,8 +47,8 @@ public class Domaine implements Serializable{
 		throw new IllegalArgumentException("Etonnant : la catégorie de mot clef n'existe pas !");
 	}
 
-	public String[] getMotClefOf(Object selectedItem) {
-		return findCategoryFromString(selectedItem.toString()).getMotClefs();
+	public String[] getMotClefOf(Object categorieMotClef) {
+		return findCategoryFromString(categorieMotClef.toString()).getMotClefs();
 	}
 	
 }
