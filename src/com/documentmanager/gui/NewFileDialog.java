@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import com.documentmanager.models.Domaine;
+import com.documentmanager.models.MotClef;
 
 public class NewFileDialog extends JDialog {
 
@@ -26,7 +27,7 @@ public class NewFileDialog extends JDialog {
 	final JFileChooser fc = new JFileChooser();
 	private FileDialogResultEnum result = FileDialogResultEnum.canceled;
 
-	public NewFileDialog(Domaine domaine) {
+	public NewFileDialog(final Domaine domaine) {
 		setResizable(false);
 		setTitle("Choisir un fichier electronique");
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -41,26 +42,26 @@ public class NewFileDialog extends JDialog {
 				public void actionPerformed(ActionEvent arg0) {
 					int returnVal = fc.showOpenDialog(NewFileDialog.this);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
-			            File file = fc.getSelectedFile();
-			            fileTextField.setText(file.getAbsolutePath());
-			        } else {
-			        	fileTextField.setText("");
-			        }
+						File file = fc.getSelectedFile();
+						fileTextField.setText(file.getAbsolutePath());
+					} else {
+						fileTextField.setText("");
+					}
 				}
 			});
 			browseButton.setBounds(383, 12, 35, 25);
 			contentPanel.add(browseButton);
 		}
-		
+
 		fileTextField = new JTextField();
 		fileTextField.setBounds(78, 12, 293, 25);
 		contentPanel.add(fileTextField);
 		fileTextField.setColumns(10);
-		
+
 		JLabel lblFichier = new JLabel("Fichier :");
 		lblFichier.setBounds(12, 17, 60, 15);
 		contentPanel.add(lblFichier);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Mot clef de d\u00E9part", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(12, 49, 406, 94);
@@ -78,21 +79,27 @@ public class NewFileDialog extends JDialog {
 			lblMotClef_1.setBounds(22, 56, 170, 24);
 			panel.add(lblMotClef_1);
 		}
-		{
-			JComboBox catMotClefList = new JComboBox();
-			
-			for (String s : domaine.getCategoriesMotClef()) {
-				catMotClefList.addItem(s);
+		final JComboBox motClefList = new JComboBox();
+		motClefList.setBounds(210, 56, 184, 24);
+		panel.add(motClefList);
+
+		final JComboBox catMotClefList = new JComboBox();
+		catMotClefList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				motClefList.removeAllItems();
+				for (String m : domaine.getMotClefOf(catMotClefList.getSelectedItem()) ) {
+					motClefList.addItem(m);
+				}
+				
 			}
-			
-			catMotClefList.setBounds(210, 24, 184, 24);
-			panel.add(catMotClefList);
+		});
+
+		for (String s : domaine.getCategoriesMotClef()) {
+			catMotClefList.addItem(s);
 		}
-		{
-			JComboBox comboBox = new JComboBox();
-			comboBox.setBounds(210, 56, 184, 24);
-			panel.add(comboBox);
-		}
+
+		catMotClefList.setBounds(210, 24, 184, 24);
+		panel.add(catMotClefList);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -101,7 +108,7 @@ public class NewFileDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.setActionCommand("OK");
 				okButton.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						result = FileDialogResultEnum.ok;
@@ -128,7 +135,7 @@ public class NewFileDialog extends JDialog {
 	public FileDialogResultEnum getResult() {
 		return result;
 	}
-	
+
 	public String getFileName() {
 		return fileTextField.getText();
 	}
