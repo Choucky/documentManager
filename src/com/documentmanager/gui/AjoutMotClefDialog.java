@@ -12,9 +12,13 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import com.documentmanager.models.CategorieMotClef;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dialog.ModalityType;
+import java.util.ArrayList;
 
 public class AjoutMotClefDialog extends JDialog {
 
@@ -23,7 +27,7 @@ public class AjoutMotClefDialog extends JDialog {
 	private JComboBox catMotClefList;
 	private FileDialogResultEnum result = FileDialogResultEnum.canceled;
 
-	public AjoutMotClefDialog(String[] categories) {
+	public AjoutMotClefDialog(ArrayList<CategorieMotClef> categories) {
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Ajout d'un mot clef pour une catégorie");
@@ -43,8 +47,8 @@ public class AjoutMotClefDialog extends JDialog {
 		catMotClefList.setBounds(214, 12, 240, 24);
 		contentPanel.add(catMotClefList);
 		
-		for (String s : categories) {
-			catMotClefList.addItem(s);
+		for (CategorieMotClef c : categories) {
+			catMotClefList.addItem(c);
 		}
 		
 		JLabel lblNouveauMotClef = new JLabel("Nouveau mot clef :");
@@ -68,6 +72,7 @@ public class AjoutMotClefDialog extends JDialog {
 							JOptionPane.showMessageDialog(AjoutMotClefDialog.this,"Vous devez indiquer le mot clef.");
 							return;
 						}
+						((CategorieMotClef) catMotClefList.getSelectedItem()).addMotClef(motClefField.getText());
 						result = FileDialogResultEnum.ok;
 						AjoutMotClefDialog.this.setVisible(false);
 					}
@@ -94,11 +99,7 @@ public class AjoutMotClefDialog extends JDialog {
 		return result;
 	}
 	
-	public String getMotClef() {
-		return motClefField.getText();
-	}
-	
-	public String getCategorieMotClef() {
-		return (String) catMotClefList.getSelectedItem();
+	public CategorieMotClef getCategorie() {
+		return (CategorieMotClef) catMotClefList.getSelectedItem();
 	}
 }

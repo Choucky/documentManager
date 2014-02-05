@@ -15,6 +15,8 @@ import javax.swing.SwingConstants;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.ComboBoxModel;
 import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -33,7 +35,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
+import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Domaine;
+import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
 
 import javax.swing.JComboBox;
@@ -124,15 +128,9 @@ public class MainWindow {
 		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
 		listeFichiers.setPreferredSize(new Dimension(250, 0));
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listeFichiers.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Fichier1", "Fichier2", "Fichier3", "Fichier4", "Fichier5"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		listeFichiers.setModel(new FileListModel());
+		
+		((FileListModel) listeFichiers.getModel()).add(new ElectronicDocument("Prout","/bin/bash"));
 
 		JScrollPane scrollPane = new JScrollPane(listeFichiers);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -218,13 +216,23 @@ public class MainWindow {
 		motClefCatList = new JComboBox();
 		motClefCatList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				motClefList.removeAllItems();
+				//motClefList.removeAllItems();
 				if (motClefCatList.getSelectedItem() == null) {
 					return;
 				}
-				for (String s : domaine.getMotClefOf(motClefCatList.getSelectedItem())) {
-					motClefList.addItem(s);
+				try {
+					motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
+				} catch (ClassCastException e) {
+					System.err.println("Etonnant : Des objets ne se cast pas comme il faudrait !");
 				}
+				try {
+					motClefList.setSelectedIndex(0);
+				} catch (IllegalArgumentException e) {
+					System.err.println("Liste de mot clefs vide.");
+				}
+				/*for (String s : domaine.getMotClefOf(motClefCatList.getSelectedItem())) {
+					motClefList.addItem(s);
+				}*/
 			}
 		});
 		motClefCatList.setBounds(12, 24, 170, 24);
@@ -355,9 +363,8 @@ public class MainWindow {
 				AjoutMotClefDialog amcd = new AjoutMotClefDialog(domaine.getCategoriesMotClef());
 				amcd.setVisible(true);
 				if (amcd.getResult() == FileDialogResultEnum.ok) {
-					domaine.addMotClef(amcd.getCategorieMotClef(), amcd.getMotClef());
-					// HACK : on force le rafraichissement de la liste
-					motClefCatList.setSelectedIndex(motClefCatList.getSelectedIndex());
+					motClefCatList.setSelectedItem(amcd.getCategorie());
+					motClefList.setSelectedIndex(motClefList.getModel().getSize() - 1);
 				}
 			}
 		});
@@ -372,10 +379,10 @@ public class MainWindow {
 	}
 
 	protected void updateMotClefCatList() {
-		motClefCatList.removeAllItems();
-		for (String d : domaine.getCategoriesMotClef()) {
-			motClefCatList.addItem(d);
-		}
+		motClefCatList.setModel(new CategorieListModel(domaine.getCategoriesMotClef()));
+		try {
+		motClefCatList.setSelectedIndex(0);
+		} catch (IllegalArgumentException e) {}
 	}
 
 	private void updateDomainlist() {

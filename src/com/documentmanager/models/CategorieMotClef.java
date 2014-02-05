@@ -21,12 +21,12 @@ public class CategorieMotClef implements Serializable{
 		motClefs.add(new MotClef(motClef));
 	}
 
-	public String[] getMotClefs() {
-		String[] result = new String[motClefs.size()];
-		for (int i=0; i<motClefs.size();i++) {
-			result[i] = motClefs.get(i).getMotClef();
-		}
-		return result;
+	public ArrayList<MotClef> getMotClefs() {
+		return motClefs;
+	}
+	
+	public String toString() {
+		return nom;
 	}
 	
 }

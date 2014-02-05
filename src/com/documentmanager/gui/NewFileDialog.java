@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Domaine;
 import com.documentmanager.models.MotClef;
 
@@ -87,48 +88,50 @@ public class NewFileDialog extends JDialog {
 		catMotClefList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				motClefList.removeAllItems();
-				for (String m : domaine.getMotClefOf(catMotClefList.getSelectedItem()) ) {
+				for (MotClef m : domaine.getMotClefOf(catMotClefList.getSelectedItem()) ) {
 					motClefList.addItem(m);
 				}
-				
+
 			}
 		});
 
-		for (String s : domaine.getCategoriesMotClef()) {
-			catMotClefList.addItem(s);
+		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
+			catMotClefList.addItem(c);
 		}
 
 		catMotClefList.setBounds(210, 24, 184, 24);
 		panel.add(catMotClefList);
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				okButton.addActionListener(new ActionListener() {
+			JButton okButton = new JButton("OK");
+			okButton.setActionCommand("OK");
+			okButton.addActionListener(new ActionListener() {
 
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						result = FileDialogResultEnum.ok;
-						NewFileDialog.this.setVisible(false);
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if (fileTextField.getText().isEmpty()) {
+						javax.swing.JOptionPane.showMessageDialog(NewFileDialog.this,"Vous devez indiquer le fichier.");
+						return;
 					}
-				});
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Annuler");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						result = FileDialogResultEnum.canceled;
-						NewFileDialog.this.setVisible(false);
-					}
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
+					result = FileDialogResultEnum.ok;
+					NewFileDialog.this.setVisible(false);
+				}
+			});
+			buttonPane.add(okButton);
+			getRootPane().setDefaultButton(okButton);
+		}
+		{
+			JButton cancelButton = new JButton("Annuler");
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					result = FileDialogResultEnum.canceled;
+					NewFileDialog.this.setVisible(false);
+				}
+			});
+			cancelButton.setActionCommand("Cancel");
+			buttonPane.add(cancelButton);
 		}
 	}
 
@@ -138,5 +141,13 @@ public class NewFileDialog extends JDialog {
 
 	public String getFileName() {
 		return fileTextField.getText();
+	}
+	
+	public String getFileLink() {
+		return fileTextField.getText();
+	}
+	
+	public String getCategorie() {
+		return null;
 	}
 }

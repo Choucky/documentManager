@@ -22,13 +22,17 @@ public class Domaine implements Serializable{
 		categories.add(new CategorieMotClef(nomCategorie));
 	}
 	
-	public String[] getCategoriesMotClef() {
+	public ArrayList<CategorieMotClef> getCategoriesMotClef() {
+		return categories;
+	}
+	
+	/*public String[] getCategoriesMotClef() {
 		String[] result = new String[categories.size()];
 		for (int i=0;i<categories.size();i++) {
 			result[i] = categories.get(i).getNom();
 		}
 		return result;
-	}
+	}*/
 	
 	public boolean hasCategories() {
 		return categories.size() > 0;
@@ -47,7 +51,7 @@ public class Domaine implements Serializable{
 		throw new IllegalArgumentException("Etonnant : la catégorie de mot clef n'existe pas !");
 	}
 
-	public String[] getMotClefOf(Object categorieMotClef) {
+	public ArrayList<MotClef> getMotClefOf(Object categorieMotClef) {
 		return findCategoryFromString(categorieMotClef.toString()).getMotClefs();
 	}
 	

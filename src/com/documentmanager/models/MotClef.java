@@ -12,8 +12,9 @@ public class MotClef implements Serializable{
 		this.motClef = motClef;
 		documents = new ArrayList<Document>();
 	}
-
-	public String getMotClef() {
+	
+	public String toString() {
 		return motClef;
 	}
+	
 }
