@@ -13,8 +13,16 @@ public class MotClef implements Serializable{
 		documents = new ArrayList<Document>();
 	}
 	
+	public void addDocument(Document d) {
+		documents.add(d);
+	}
+	
 	public String toString() {
 		return motClef;
+	}
+
+	public ArrayList<Document> getDocuments() {
+		return documents;
 	}
 	
 }

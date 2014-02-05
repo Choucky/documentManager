@@ -36,6 +36,7 @@ import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.CategorieMotClef;
+import com.documentmanager.models.Document;
 import com.documentmanager.models.Domaine;
 import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
@@ -65,6 +66,8 @@ public class MainWindow {
 	Domaine domaine;
 	private JLabel txtDomaine;
 	private boolean ready = false;
+
+	private JList listeFichiers;
 
 	/**
 	 * Launch the application.
@@ -124,13 +127,11 @@ public class MainWindow {
 		frmDocumentmanager.getContentPane().add(panel_3, BorderLayout.WEST);
 		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
 
-		JList listeFichiers = new JList();
+		listeFichiers = new JList();
 		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
 		listeFichiers.setPreferredSize(new Dimension(250, 0));
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listeFichiers.setModel(new FileListModel());
-		
-		((FileListModel) listeFichiers.getModel()).add(new ElectronicDocument("Prout","/bin/bash"));
 
 		JScrollPane scrollPane = new JScrollPane(listeFichiers);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -325,8 +326,7 @@ public class MainWindow {
 				NewFileDialog nfd = new NewFileDialog(domaine);
 				nfd.setVisible(true);
 				if (nfd.getResult() == FileDialogResultEnum.ok) {
-					//nfd.getFileName());
-					//TODO
+					refreshFileList();
 				}
 			}
 		});
@@ -381,7 +381,7 @@ public class MainWindow {
 	protected void updateMotClefCatList() {
 		motClefCatList.setModel(new CategorieListModel(domaine.getCategoriesMotClef()));
 		try {
-		motClefCatList.setSelectedIndex(0);
+			motClefCatList.setSelectedIndex(0);
 		} catch (IllegalArgumentException e) {}
 	}
 
@@ -389,6 +389,18 @@ public class MainWindow {
 		domainesComboBox.removeAllItems();
 		for (String d : domaines) {
 			domainesComboBox.addItem(d);
+		}
+	}
+	
+	protected void refreshFileList() {
+		FileListModel flm = (FileListModel) listeFichiers.getModel();
+		flm.clear();
+		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
+			for (MotClef m : c.getMotClefs()) {
+				for (Document d : m.getDocuments()) {
+					flm.add(d);
+				}
+			}
 		}
 	}
 	
@@ -414,6 +426,7 @@ public class MainWindow {
 	
 	private void updateFrameContent() {
 		updateMotClefCatList();
+		refreshFileList();
 	}
 
 	private void saveDomain() {

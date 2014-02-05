@@ -14,8 +14,12 @@ public class FileListModel extends AbstractListModel {
 		documents = new ArrayList<Document>();
 	}
 	
-	public void add(Document d) {
+	public void add(Document d) throws IllegalArgumentException {
+		if (documents.contains(d)) {
+			throw new IllegalArgumentException("Le fichier est déja dans la liste.");
+		}
 		documents.add(d);
+		fireContentsChanged(this, 0, getSize()-1);
 	}
 	
 	public void clear() {

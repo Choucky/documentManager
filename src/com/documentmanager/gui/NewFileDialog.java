@@ -13,12 +13,15 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Domaine;
+import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
 
 public class NewFileDialog extends JDialog {
@@ -87,17 +90,13 @@ public class NewFileDialog extends JDialog {
 		final JComboBox catMotClefList = new JComboBox();
 		catMotClefList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				motClefList.removeAllItems();
-				for (MotClef m : domaine.getMotClefOf(catMotClefList.getSelectedItem()) ) {
-					motClefList.addItem(m);
-				}
-
+				motClefList.setModel(new MotClefListModel(((CategorieMotClef) catMotClefList.getSelectedItem()).getMotClefs()));
+				motClefList.setSelectedIndex(0);
 			}
 		});
 
-		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
-			catMotClefList.addItem(c);
-		}
+		catMotClefList.setModel(new CategorieListModel(domaine.getCategoriesMotClef()));
+		catMotClefList.setSelectedIndex(0);
 
 		catMotClefList.setBounds(210, 24, 184, 24);
 		panel.add(catMotClefList);
@@ -116,6 +115,12 @@ public class NewFileDialog extends JDialog {
 						return;
 					}
 					result = FileDialogResultEnum.ok;
+					String filepath = fileTextField.getText();
+					String[] fileSplit = filepath.split("/");
+					
+					ElectronicDocument ed = new ElectronicDocument(fileSplit[fileSplit.length - 1], filepath);
+					((MotClef) motClefList.getSelectedItem()).addDocument(ed);
+					
 					NewFileDialog.this.setVisible(false);
 				}
 			});
