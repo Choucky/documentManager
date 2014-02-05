@@ -36,6 +36,7 @@ import javax.swing.BoxLayout;
 import java.util.ArrayList;
 
 import com.documentmanager.models.CategorieMotClef;
+import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
 import com.documentmanager.models.Domaine;
 import com.documentmanager.models.ElectronicDocument;
@@ -68,6 +69,7 @@ public class MainWindow {
 	private boolean ready = false;
 
 	private JList listeFichiers;
+	private JComboBox critereList;
 
 	/**
 	 * Launch the application.
@@ -192,11 +194,11 @@ public class MainWindow {
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(8, 20, 125, 24);
-		comboBox_1.setPreferredSize(new Dimension(125, 24));
-		comboBox_1.setMinimumSize(new Dimension(125, 24));
-		panel_2.add(comboBox_1);
+		critereList = new JComboBox();
+		critereList.setBounds(8, 20, 125, 24);
+		critereList.setPreferredSize(new Dimension(125, 24));
+		critereList.setMinimumSize(new Dimension(125, 24));
+		panel_2.add(critereList);
 
 		JButton button = new JButton("+");
 		button.setBounds(138, 20, 44, 25);
@@ -326,7 +328,7 @@ public class MainWindow {
 				NewFileDialog nfd = new NewFileDialog(domaine);
 				nfd.setVisible(true);
 				if (nfd.getResult() == FileDialogResultEnum.ok) {
-					refreshFileList();
+					updateFileList();
 				}
 			}
 		});
@@ -370,6 +372,23 @@ public class MainWindow {
 		});
 		mnMotClefs.add(mntmNouveauMotClef);
 		
+		JMenu mnCritres = new JMenu("Critères");
+		menuBar.add(mnCritres);
+		
+		JMenuItem mntmAjouterUnCritre = new JMenuItem("Ajouter un critère...");
+		mntmAjouterUnCritre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String critere = JOptionPane.showInputDialog("Veuillez indiquer le nom du critère :");
+				if (critere.equals("")) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom de critère saisi, le critère ne sera PAS créé.");
+					return;
+				}
+				domaine.addCritere(new Critere(critere));
+				updateCritereList(true);
+			}
+		});
+		mnCritres.add(mntmAjouterUnCritre);
+		
 		ready = true;
 		try {
 			domainesComboBox.setSelectedIndex(0);
@@ -385,6 +404,11 @@ public class MainWindow {
 		} catch (IllegalArgumentException e) {}
 	}
 
+	private void updateCritereList(boolean selectEnd) {
+		critereList.setModel(new CritereListModel(domaine.getCriteres()));
+		critereList.setSelectedIndex((selectEnd)?critereList.getModel().getSize()-1:0);
+	}
+	
 	private void updateDomainlist() {
 		domainesComboBox.removeAllItems();
 		for (String d : domaines) {
@@ -392,7 +416,7 @@ public class MainWindow {
 		}
 	}
 	
-	protected void refreshFileList() {
+	protected void updateFileList() {
 		FileListModel flm = (FileListModel) listeFichiers.getModel();
 		flm.clear();
 		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
@@ -419,14 +443,14 @@ public class MainWindow {
 			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Données incompatibles : " + e.getMessage());
 			e.printStackTrace();
 		}
-		
-		//TODO : Rafraichir les contrôles
+
 		updateFrameContent();
 	}
 	
 	private void updateFrameContent() {
 		updateMotClefCatList();
-		refreshFileList();
+		updateCritereList(false);
+		updateFileList();
 	}
 
 	private void saveDomain() {
@@ -462,4 +486,7 @@ public class MainWindow {
 		System.exit(0);
 	}
 
+	public JComboBox getComboBox_1() {
+		return critereList;
+	}
 }

@@ -12,10 +12,15 @@ public class Domaine implements Serializable{
 	public Domaine(String nom) {
 		this.nom = nom;
 		categories = new ArrayList<CategorieMotClef>();
+		criteres = new ArrayList<Critere>();
 	}
 
 	public String getNom() {
 		return nom;
+	}
+	
+	public void addCritere(Critere c) {
+		criteres.add(c);
 	}
 	
 	public void addCategorieMotClef(String nomCategorie) {
@@ -25,14 +30,6 @@ public class Domaine implements Serializable{
 	public ArrayList<CategorieMotClef> getCategoriesMotClef() {
 		return categories;
 	}
-	
-	/*public String[] getCategoriesMotClef() {
-		String[] result = new String[categories.size()];
-		for (int i=0;i<categories.size();i++) {
-			result[i] = categories.get(i).getNom();
-		}
-		return result;
-	}*/
 	
 	public boolean hasCategories() {
 		return categories.size() > 0;
@@ -53,6 +50,10 @@ public class Domaine implements Serializable{
 
 	public ArrayList<MotClef> getMotClefOf(Object categorieMotClef) {
 		return findCategoryFromString(categorieMotClef.toString()).getMotClefs();
+	}
+
+	public ArrayList<Critere> getCriteres() {
+		return criteres;
 	}
 	
 }
