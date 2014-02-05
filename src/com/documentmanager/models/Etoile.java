@@ -16,4 +16,21 @@ public enum Etoile {
 	public int getValue() {
 		return value;
 	}
+	
+	@Override
+	public String toString() {
+		switch(this) {
+		case uneEtoile:
+			return "★";
+		case deuxEtoiles:
+			return "★★";
+		case troisEtoiles:
+			return "★★★";
+		case quatreEtoiles:
+			return "★★★★";
+		case cinqEtoiles:
+			return "★★★★★";
+		}
+		return null;
+	}
 }
