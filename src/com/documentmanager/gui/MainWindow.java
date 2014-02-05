@@ -53,6 +53,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainWindow {
 
@@ -130,6 +132,16 @@ public class MainWindow {
 		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
 
 		listeFichiers = new JList();
+		listeFichiers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				JList list = (JList)evt.getSource();
+				if (evt.getClickCount() != 2 || list.getSelectedValue() == null) {
+					return;
+				}
+
+			}
+		});
 		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
 		listeFichiers.setPreferredSize(new Dimension(250, 0));
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -158,18 +170,18 @@ public class MainWindow {
 		domainesComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JComboBox cb = (JComboBox)arg0.getSource();
-		        String domaine_selection = (String)cb.getSelectedItem();
-		        if (domaine != null) {
-		        	saveDomain();
-		        }
-		        if (ready && domaine_selection != null) {
-		        	loadDomain(domaine_selection);
-		        }
+				String domaine_selection = (String)cb.getSelectedItem();
+				if (domaine != null) {
+					saveDomain();
+				}
+				if (ready && domaine_selection != null) {
+					loadDomain(domaine_selection);
+				}
 			}
 		});
 		domainesComboBox.setPreferredSize(new Dimension(200, 24));
 		domainesComboBox.setMinimumSize(new Dimension(200, 24));
-		
+
 		//Trouver les domaines
 		File[] files = findDomains();
 		for (File f : files) {
@@ -177,7 +189,7 @@ public class MainWindow {
 			domainesComboBox.addItem(domaine_nom);
 			domaines.add(domaine_nom);
 		}
-		
+
 		panel_1.add(domainesComboBox);
 
 		JPanel panel = new JPanel();
@@ -215,7 +227,7 @@ public class MainWindow {
 		motClefList.setPreferredSize(new Dimension(125, 24));
 		motClefList.setMinimumSize(new Dimension(125, 24));
 		panel_4.add(motClefList);
-		
+
 		motClefCatList = new JComboBox();
 		motClefCatList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -242,7 +254,7 @@ public class MainWindow {
 		motClefCatList.setPreferredSize(new Dimension(125, 24));
 		motClefCatList.setMinimumSize(new Dimension(125, 24));
 		panel_4.add(motClefCatList);
-		
+
 		JButton button_2 = new JButton("+");
 		button_2.setBounds(138, 51, 44, 25);
 		panel_4.add(button_2);
@@ -252,7 +264,7 @@ public class MainWindow {
 		panel_5.setBorder(new TitledBorder(null, "Filtres actuels", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.add(panel_5);
 		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
-		
+
 		JList listeCriteres = new JList();
 		listeCriteres.setPreferredSize(new Dimension(250, 0));
 		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -265,12 +277,12 @@ public class MainWindow {
 				return values[index];
 			}
 		});
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
 		scrollPane_1.setToolTipText("Double cliquez sur un filtre pour le supprimer.");
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		panel_5.add(scrollPane_1);
-		
+
 		scrollPane_1.add(listeCriteres);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -339,7 +351,7 @@ public class MainWindow {
 
 		JMenu mnMotClefs = new JMenu("Mot clefs");
 		menuBar.add(mnMotClefs);
-		
+
 		JMenuItem mntmNouvelleCatgorieDe = new JMenuItem("Nouvelle catégorie de mot clef...");
 		mntmNouvelleCatgorieDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -371,10 +383,10 @@ public class MainWindow {
 			}
 		});
 		mnMotClefs.add(mntmNouveauMotClef);
-		
+
 		JMenu mnCritres = new JMenu("Critères");
 		menuBar.add(mnCritres);
-		
+
 		JMenuItem mntmAjouterUnCritre = new JMenuItem("Ajouter un critère...");
 		mntmAjouterUnCritre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -388,7 +400,7 @@ public class MainWindow {
 			}
 		});
 		mnCritres.add(mntmAjouterUnCritre);
-		
+
 		ready = true;
 		try {
 			domainesComboBox.setSelectedIndex(0);
@@ -406,17 +418,21 @@ public class MainWindow {
 
 	private void updateCritereList(boolean selectEnd) {
 		critereList.setModel(new CritereListModel(domaine.getCriteres()));
-		critereList.setSelectedIndex((selectEnd)?critereList.getModel().getSize()-1:0);
+		try {
+			critereList.setSelectedIndex((selectEnd)?critereList.getModel().getSize()-1:0);
+		} catch (IllegalArgumentException e) {
+			System.err.println("Erreur lors du chargement des critères, sans doute il n'en existe pas.");
+		}
 	}
-	
+
 	private void updateDomainlist() {
 		domainesComboBox.removeAllItems();
 		for (String d : domaines) {
 			domainesComboBox.addItem(d);
 		}
 	}
-	
-	protected void updateFileList() {
+
+	private void updateFileList() {
 		FileListModel flm = (FileListModel) listeFichiers.getModel();
 		flm.clear();
 		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
@@ -427,7 +443,7 @@ public class MainWindow {
 			}
 		}
 	}
-	
+
 	private void loadDomain(String domaine_selection) {
 		try {
 			ObjectInputStream input_domain = new ObjectInputStream(new FileInputStream(domaine_selection+".bin"));
@@ -446,7 +462,7 @@ public class MainWindow {
 
 		updateFrameContent();
 	}
-	
+
 	private void updateFrameContent() {
 		updateMotClefCatList();
 		updateCritereList(false);
@@ -470,16 +486,16 @@ public class MainWindow {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private File[] findDomains() {
 		return new File(".").listFiles(new FilenameFilter() {
-		    @Override
-		    public boolean accept(File dir, String name) {
-		        return name.endsWith(".bin");
-		    }
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".bin");
+			}
 		});
 	}
-	
+
 	private void finish() {
 		saveDomain();
 		frmDocumentmanager.dispose();
