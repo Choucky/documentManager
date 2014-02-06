@@ -335,6 +335,15 @@ public class MainWindow {
 		mnNouveau.add(mntmDocumentElectronique);
 
 		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
+		mntmDocumentPapier.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				NewPaperDocumentDialog npd = new NewPaperDocumentDialog(domaine);
+				npd.setVisible(true);
+				if (npd.getResult() == FileDialogResultEnum.ok){
+					updateFileList();
+				}
+			}
+		});
 		mnNouveau.add(mntmDocumentPapier);
 
 		JMenu mnMotClefs = new JMenu("Mot clefs");
