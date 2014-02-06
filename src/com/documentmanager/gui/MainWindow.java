@@ -59,6 +59,8 @@ import java.awt.event.MouseEvent;
 public class MainWindow {
 
 	private JFrame frmDocumentmanager;
+	
+	public final String FILE_EXTENSION = ".obj";
 
 	//Composants
 	private JComboBox domainesComboBox;
@@ -451,7 +453,7 @@ public class MainWindow {
 
 	private void loadDomain(String domaine_selection) {
 		try {
-			ObjectInputStream input_domain = new ObjectInputStream(new FileInputStream(domaine_selection+".bin"));
+			ObjectInputStream input_domain = new ObjectInputStream(new FileInputStream(domaine_selection+FILE_EXTENSION));
 			domaine = (Domaine) input_domain.readObject();
 			input_domain.close();
 		} catch (FileNotFoundException e) {
@@ -479,7 +481,7 @@ public class MainWindow {
 			return;
 		}
 		try {
-			ObjectOutputStream output_domain = new ObjectOutputStream(new FileOutputStream(domaine.getNom()+".bin"));
+			ObjectOutputStream output_domain = new ObjectOutputStream(new FileOutputStream(domaine.getNom()+FILE_EXTENSION));
 			output_domain.writeObject(domaine);
 			output_domain.flush();
 			output_domain.close();

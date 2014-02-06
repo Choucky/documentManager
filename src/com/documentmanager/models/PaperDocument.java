@@ -11,8 +11,12 @@ public class PaperDocument extends Document implements Serializable{
 		this.commentaire = commentaire;
 	}
 	
-	public String getDocumentType() {
-		return "Document papier";
+	public DocumentTypeEnum getDocumentType() {
+		return DocumentTypeEnum.documentPapier;
+	}
+
+	public String getCommentaire() {
+		return commentaire;
 	}
 	
 }

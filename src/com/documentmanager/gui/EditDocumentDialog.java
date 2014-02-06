@@ -16,9 +16,11 @@ import javax.swing.JComboBox;
 import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
+import com.documentmanager.models.DocumentTypeEnum;
 import com.documentmanager.models.Domaine;
 import com.documentmanager.models.MotClef;
 import com.documentmanager.models.Note;
+import com.documentmanager.models.PaperDocument;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -59,7 +61,7 @@ public class EditDocumentDialog extends JDialog {
 		setResizable(false);
 		setTitle("Edition de fichier");
 		setModal(true);
-		setBounds(100, 100, 450, 553);
+		setBounds(100, 100, 450, 563);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -86,11 +88,22 @@ public class EditDocumentDialog extends JDialog {
 		typeLabel.setBounds(146, 39, 272, 15);
 		contentPanel.add(typeLabel);
 		
-		typeLabel.setText(doc.getDocumentType());
+		typeLabel.setText(doc.getDocumentType().toString());
 		
+		if (doc.getDocumentType() == DocumentTypeEnum.documentPapier) {
+			JLabel lblCommentaire = new JLabel("Commentaire :");
+			lblCommentaire.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblCommentaire.setBounds(22, 66, 112, 15);
+			contentPanel.add(lblCommentaire);
+			
+			PaperDocument paperDoc = (PaperDocument) doc;
+			JLabel label = new JLabel(paperDoc.getCommentaire());
+			label.setBounds(146, 66, 290, 15);
+			contentPanel.add(label);
+		}
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panel.setBounds(12, 283, 424, 191);
+		panel.setBounds(12, 296, 424, 191);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -161,14 +174,10 @@ public class EditDocumentDialog extends JDialog {
 		motClefListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(motClefListDocument);
 		
-		JSeparator separator = new JSeparator();
-		separator.setBounds(12, 66, 424, 2);
-		contentPanel.add(separator);
-		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBorder(new TitledBorder(null, "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(12, 80, 424, 191);
+		panel_1.setBounds(12, 93, 424, 191);
 		contentPanel.add(panel_1);
 		
 		critereList = new JComboBox();
@@ -253,5 +262,4 @@ public class EditDocumentDialog extends JDialog {
 		critereListDocument.setModel(new NoteListModel(document.getNotes()));
 		motClefListDocument.setModel(new DocumentMotClefListModel(document,domaine));
 	}
-	
 }

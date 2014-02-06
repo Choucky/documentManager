@@ -19,8 +19,8 @@ public abstract class Document implements Serializable{
 		return titre;
 	}
 	
-	public String getDocumentType() {
-		return "Document";
+	public DocumentTypeEnum getDocumentType() {
+		return DocumentTypeEnum.document;
 	}
 	
 	public void addNote(Etoile star, Document document, Critere critere) {

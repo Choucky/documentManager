@@ -10,7 +10,7 @@ public class ElectronicDocument extends Document implements Serializable{
 		this.link = link;
 	}
 	
-	public String getDocumentType() {
-		return "Document électronique";
+	public DocumentTypeEnum getDocumentType() {
+		return DocumentTypeEnum.documentElectronique;
 	}
 }
