@@ -16,7 +16,6 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -26,7 +25,6 @@ import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import javax.swing.ListSelectionModel;
-import javax.swing.AbstractListModel;
 import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
@@ -39,11 +37,9 @@ import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
 import com.documentmanager.models.Domaine;
-import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
 
 import javax.swing.JComboBox;
-import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

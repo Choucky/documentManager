@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 import javax.swing.JComboBox;
 
@@ -24,18 +23,14 @@ import com.documentmanager.models.PaperDocument;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.Dialog.ModalityType;
 import javax.swing.DefaultComboBoxModel;
 import com.documentmanager.models.Etoile;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
