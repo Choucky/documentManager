@@ -327,6 +327,9 @@ public class MainWindow {
 		JMenuItem mntmDocumentElectronique = new JMenuItem("Document electronique...");
 		mntmDocumentElectronique.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (!canMakeDocument()) {
+					return;
+				}
 				NewElectronicDocumentDialog nfd = new NewElectronicDocumentDialog(domaine);
 				nfd.setVisible(true);
 				if (nfd.getResult() == FileDialogResultEnum.ok) {
@@ -339,6 +342,9 @@ public class MainWindow {
 		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
 		mntmDocumentPapier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (!canMakeDocument()) {
+					return;
+				}
 				NewPaperDocumentDialog npd = new NewPaperDocumentDialog(domaine);
 				npd.setVisible(true);
 				if (npd.getResult() == FileDialogResultEnum.ok){
@@ -511,5 +517,31 @@ public class MainWindow {
 
 	public JComboBox getComboBox_1() {
 		return critereList;
+	}
+	
+	private boolean canMakeDocument() {
+		 if (!domaineExists()) {
+			 return false;
+		 }
+		
+		if (domaine.getCategoriesMotClef().size() > 0) {
+			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
+				if (c.getMotClefs().size() > 0) {
+					return true;
+				}
+			}
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer au moins un mot clef.");
+		} else {
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer au moins une catégorie de mot clef.");
+		}
+		return false;
+	}
+
+	private boolean domaineExists() {
+		if (domaine == null) {
+			javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un domaine.");
+			return false;
+		}
+		return true;
 	}
 }
