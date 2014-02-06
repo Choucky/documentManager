@@ -73,6 +73,8 @@ public class MainWindow {
 	private JList listeFichiers;
 	private JComboBox critereList;
 
+	private JComboBox motClefList;
+
 	/**
 	 * Launch the application.
 	 */
@@ -223,7 +225,7 @@ public class MainWindow {
 		panel.add(panel_4);
 		panel_4.setLayout(null);
 
-		final JComboBox motClefList = new JComboBox();
+		motClefList = new JComboBox();
 		motClefList.setBounds(12, 51, 125, 24);
 		motClefList.setPreferredSize(new Dimension(125, 24));
 		motClefList.setMinimumSize(new Dimension(125, 24));
@@ -232,7 +234,7 @@ public class MainWindow {
 		motClefCatList = new JComboBox();
 		motClefCatList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//motClefList.removeAllItems();
+				JComboBox motClefCatList = (JComboBox) arg0.getSource();
 				if (motClefCatList.getSelectedItem() == null) {
 					return;
 				}
@@ -246,9 +248,6 @@ public class MainWindow {
 				} catch (IllegalArgumentException e) {
 					System.err.println("Liste de mot clefs vide.");
 				}
-				/*for (String s : domaine.getMotClefOf(motClefCatList.getSelectedItem())) {
-					motClefList.addItem(s);
-				}*/
 			}
 		});
 		motClefCatList.setBounds(12, 24, 170, 24);
@@ -402,7 +401,10 @@ public class MainWindow {
 		motClefCatList.setModel(new CategorieListModel(domaine.getCategoriesMotClef()));
 		try {
 			motClefCatList.setSelectedIndex(0);
-		} catch (IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+			//HACK : Insère une liste vide quand il n'existe pas de données
+			motClefList.setModel(new MotClefListModel(new ArrayList<MotClef>()));
+		}
 	}
 
 	private void updateCritereList(boolean selectEnd) {
