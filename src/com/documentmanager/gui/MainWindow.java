@@ -360,6 +360,9 @@ public class MainWindow {
 		JMenuItem mntmNouvelleCatgorieDe = new JMenuItem("Nouvelle catégorie de mot clef...");
 		mntmNouvelleCatgorieDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (!domaineExists()) {
+					return;
+				}
 				String catMotClef = JOptionPane.showInputDialog("Veuillez indiquer le nom de la catégorie de mot clef :");
 				if (catMotClef.equals("")) {
 					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, la catégorie ne sera PAS créé.");
@@ -375,6 +378,9 @@ public class MainWindow {
 		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
 		mntmNouveauMotClef.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (!domaineExists()) {
+					return;
+				}
 				if (!domaine.hasCategories()) {
 					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
 					return;
