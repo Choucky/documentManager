@@ -13,6 +13,7 @@ import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 import javax.swing.JComboBox;
 
+import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
 import com.documentmanager.models.Domaine;
@@ -44,6 +45,8 @@ public class EditDocumentDialog extends JDialog {
 	private Domaine domaine;
 	private JComboBox noteList;
 	private JList critereListDocument;
+	private JComboBox motClefCatList;
+	private JComboBox motClefList;
 
 	public EditDocumentDialog(Document doc, Domaine dom) {
 		document = doc;
@@ -87,26 +90,34 @@ public class EditDocumentDialog extends JDialog {
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(12, 24, 170, 24);
-		panel.add(comboBox_1);
+		motClefList = new JComboBox();
+		motClefList.setBounds(194, 24, 161, 24);
+		panel.add(motClefList);
+		
+		motClefCatList = new JComboBox();
+		motClefCatList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs())); 
+				motClefList.setSelectedIndex(0);
+			}
+		});
+		motClefCatList.setBounds(12, 24, 170, 24);
+		motClefCatList.setModel(new CategorieListModel(dom.getCategoriesMotClef()));
+		motClefCatList.setSelectedIndex(0);
+		panel.add(motClefCatList);
 		
 		JButton button = new JButton("+");
 		button.setBounds(367, 24, 45, 25);
 		panel.add(button);
 		
-		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(194, 24, 161, 24);
-		panel.add(comboBox_3);
-		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(12, 60, 400, 119);
 		panel.add(scrollPane_1);
 		
-		JList list_1 = new JList();
-		list_1.setToolTipText("Double-cliquez pour effacer un mot clef.");
-		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane_1.setViewportView(list_1);
+		JList motClefListDocument = new JList();
+		motClefListDocument.setToolTipText("Double-cliquez pour effacer un mot clef.");
+		motClefListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane_1.setViewportView(motClefListDocument);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(12, 66, 424, 2);
