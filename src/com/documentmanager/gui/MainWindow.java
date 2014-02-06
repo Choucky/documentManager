@@ -433,6 +433,7 @@ public class MainWindow {
 				}
 			}
 		}
+		listeFichiers.repaint();
 	}
 
 	private void loadDomain(String domaine_selection) {
