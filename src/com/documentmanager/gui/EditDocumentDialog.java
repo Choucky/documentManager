@@ -36,6 +36,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class EditDocumentDialog extends JDialog {
 
@@ -161,6 +163,19 @@ public class EditDocumentDialog extends JDialog {
 		panel_1.add(scrollPane);
 		
 		critereListDocument = new JList();
+		critereListDocument.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JList source = (JList) arg0.getSource();
+				if (source.getSelectedValue() == null) {
+					return;
+				}
+				if (arg0.getClickCount() == 2) {
+					document.deleteNote((Note) source.getSelectedValue());
+					populateLists();
+				}
+			}
+		});
 		critereListDocument.setToolTipText("Double-cliquez pour effacer un critère.");
 		scrollPane.setViewportView(critereListDocument);
 		critereListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

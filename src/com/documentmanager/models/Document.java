@@ -39,4 +39,8 @@ public abstract class Document implements Serializable{
 		}
 		return null;
 	}
+
+	public void deleteNote(Note n) {
+		notes.remove(n);
+	}
 }
