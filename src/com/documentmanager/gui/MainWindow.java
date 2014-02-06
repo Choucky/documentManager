@@ -141,7 +141,7 @@ public class MainWindow {
 				if (evt.getClickCount() != 2 || list.getSelectedValue() == null) {
 					return;
 				}
-				EditFileDialog efd = new EditFileDialog((Document) list.getSelectedValue());
+				EditDocumentDialog efd = new EditDocumentDialog((Document) list.getSelectedValue(), domaine);
 				efd.setVisible(true);
 			}
 		});

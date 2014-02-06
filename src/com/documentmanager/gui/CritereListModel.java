@@ -34,6 +34,10 @@ public class CritereListModel extends AbstractListModel implements ComboBoxModel
 	@Override
 	public void setSelectedItem(Object arg0) {
 		selection = arg0;
+		fireContentsChanged();
+	}
+	
+	public void fireContentsChanged() {
 		fireContentsChanged(this, 0, getSize()-1);
 	}
 

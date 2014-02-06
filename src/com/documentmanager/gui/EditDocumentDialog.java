@@ -13,7 +13,10 @@ import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
 import javax.swing.JComboBox;
 
+import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
+import com.documentmanager.models.Domaine;
+import com.documentmanager.models.Note;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,23 +24,35 @@ import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dialog.ModalityType;
 import javax.swing.DefaultComboBoxModel;
 import com.documentmanager.models.Etoile;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import javax.swing.border.LineBorder;
 import java.awt.Color;
+import java.util.ArrayList;
+
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-public class EditFileDialog extends JDialog {
+public class EditDocumentDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private JComboBox critereList;
+	private Document document;
+	private Domaine domaine;
+	private JComboBox noteList;
+	private JList critereListDocument;
 
-	public EditFileDialog(Document d) {
+	public EditDocumentDialog(Document doc, Domaine dom) {
+		document = doc;
+		domaine = dom;
+		
 		setResizable(false);
 		setTitle("Edition de fichier");
 		setModal(true);
-		setBounds(100, 100, 450, 579);
+		setBounds(100, 100, 450, 553);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -53,7 +68,7 @@ public class EditFileDialog extends JDialog {
 		filenameLabel.setBounds(146, 12, 272, 15);
 		contentPanel.add(filenameLabel);
 		
-		filenameLabel.setText(d.toString());
+		filenameLabel.setText(doc.toString());
 		
 		JLabel lblType = new JLabel("Type :");
 		lblType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -64,11 +79,11 @@ public class EditFileDialog extends JDialog {
 		typeLabel.setBounds(146, 39, 272, 15);
 		contentPanel.add(typeLabel);
 		
-		typeLabel.setText(d.getDocumentType());
+		typeLabel.setText(doc.getDocumentType());
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panel.setBounds(12, 310, 424, 191);
+		panel.setBounds(12, 283, 424, 191);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -89,18 +104,9 @@ public class EditFileDialog extends JDialog {
 		panel.add(scrollPane_1);
 		
 		JList list_1 = new JList();
+		list_1.setToolTipText("Double-cliquez pour effacer un mot clef.");
 		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(list_1);
-		
-		JLabel lblNote = new JLabel("Note :");
-		lblNote.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNote.setBounds(12, 80, 122, 15);
-		contentPanel.add(lblNote);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(Etoile.values()));
-		comboBox.setBounds(146, 75, 290, 24);
-		contentPanel.add(comboBox);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(12, 66, 424, 2);
@@ -109,14 +115,31 @@ public class EditFileDialog extends JDialog {
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBorder(new TitledBorder(null, "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(12, 107, 424, 191);
+		panel_1.setBounds(12, 80, 424, 191);
 		contentPanel.add(panel_1);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(12, 24, 343, 24);
-		panel_1.add(comboBox_2);
+		critereList = new JComboBox();
+		critereList.setBounds(12, 24, 169, 24);
+		critereList.setModel(new CritereListModel(new ArrayList<Critere>()));
+		critereList.setModel(new CritereListModel(domaine.getCriteres()));
+		critereList.setSelectedIndex(0);
+		panel_1.add(critereList);
 		
 		JButton button_1 = new JButton("+");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Critere critere = (Critere) critereList.getSelectedItem();
+				Etoile star = (Etoile) noteList.getSelectedItem();
+				
+				Note note = document.findNoteOf(critere);
+				if (note == null) {
+					document.addNote(star, document, critere);
+				} else {
+					note.setEtoile(star);
+				}
+				populateLists();
+			}
+		});
 		button_1.setBounds(367, 24, 45, 25);
 		panel_1.add(button_1);
 		
@@ -126,18 +149,16 @@ public class EditFileDialog extends JDialog {
 		scrollPane.setBounds(12, 60, 400, 119);
 		panel_1.add(scrollPane);
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		critereListDocument = new JList();
+		critereListDocument.setToolTipText("Double-cliquez pour effacer un critère.");
+		scrollPane.setViewportView(critereListDocument);
+		critereListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		critereListDocument.setModel(new CritereListModel(new ArrayList<Critere>()));
+		
+		noteList = new JComboBox();
+		noteList.setBounds(193, 24, 162, 24);
+		panel_1.add(noteList);
+		noteList.setModel(new DefaultComboBoxModel(Etoile.values()));
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -146,7 +167,7 @@ public class EditFileDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						EditFileDialog.this.setVisible(false);
+						EditDocumentDialog.this.setVisible(false);
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -154,5 +175,25 @@ public class EditFileDialog extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 		}
+		populateLists();
 	}
+	
+	private ArrayList<?> substractLists(ArrayList<?> list1, ArrayList<?> list2) {
+		ArrayList<?> result = (ArrayList<?>) list1.clone();
+		
+		for (Object o : list2) {
+			int index = result.indexOf(o);
+			if (index != -1) {
+				result.remove(index);
+			}
+		}
+		
+		return result;
+	}
+	
+	private void populateLists() {
+		critereListDocument.setModel(new NoteListModel(document.getNotes()));
+		
+	}
+	
 }
