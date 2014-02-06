@@ -139,7 +139,8 @@ public class MainWindow {
 				if (evt.getClickCount() != 2 || list.getSelectedValue() == null) {
 					return;
 				}
-
+				EditFileDialog efd = new EditFileDialog((Document) list.getSelectedValue());
+				efd.setVisible(true);
 			}
 		});
 		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
@@ -265,25 +266,13 @@ public class MainWindow {
 		panel.add(panel_5);
 		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
 
-		JList listeCriteres = new JList();
-		listeCriteres.setPreferredSize(new Dimension(250, 0));
-		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listeCriteres.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Fichier1", "Fichier2", "Fichier3", "Fichier4", "Fichier5"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-
 		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
 		scrollPane_1.setToolTipText("Double cliquez sur un filtre pour le supprimer.");
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		panel_5.add(scrollPane_1);
-
-		scrollPane_1.add(listeCriteres);
+		
+		JList list = new JList();
+		scrollPane_1.setViewportView(list);
 
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);

@@ -8,6 +8,10 @@ public class PaperDocument extends Document implements Serializable{
 	
 	public PaperDocument(String titre) {
 		super(titre);
-		
 	}
+	
+	public String getDocumentType() {
+		return "Document papier";
+	}
+	
 }

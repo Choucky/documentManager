@@ -18,4 +18,8 @@ public abstract class Document implements Serializable{
 	public String toString() {
 		return titre;
 	}
+	
+	public String getDocumentType() {
+		return "Document";
+	}
 }

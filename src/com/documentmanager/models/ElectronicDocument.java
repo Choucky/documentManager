@@ -9,4 +9,8 @@ public class ElectronicDocument extends Document implements Serializable{
 		super(nom);
 		this.link = link;
 	}
+	
+	public String getDocumentType() {
+		return "Document électronique";
+	}
 }
