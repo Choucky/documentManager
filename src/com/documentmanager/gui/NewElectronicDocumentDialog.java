@@ -24,14 +24,14 @@ import com.documentmanager.models.Domaine;
 import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
 
-public class NewFileDialog extends JDialog {
+public class NewElectronicDocumentDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField fileTextField;
 	final JFileChooser fc = new JFileChooser();
 	private FileDialogResultEnum result = FileDialogResultEnum.canceled;
 
-	public NewFileDialog(final Domaine domaine) {
+	public NewElectronicDocumentDialog(final Domaine domaine) {
 		setResizable(false);
 		setTitle("Choisir un fichier electronique");
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -44,7 +44,7 @@ public class NewFileDialog extends JDialog {
 			JButton browseButton = new JButton("...");
 			browseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					int returnVal = fc.showOpenDialog(NewFileDialog.this);
+					int returnVal = fc.showOpenDialog(NewElectronicDocumentDialog.this);
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						File file = fc.getSelectedFile();
 						fileTextField.setText(file.getAbsolutePath());
@@ -111,7 +111,7 @@ public class NewFileDialog extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if (fileTextField.getText().isEmpty()) {
-						javax.swing.JOptionPane.showMessageDialog(NewFileDialog.this,"Vous devez indiquer le fichier.");
+						javax.swing.JOptionPane.showMessageDialog(NewElectronicDocumentDialog.this,"Vous devez indiquer le fichier.");
 						return;
 					}
 					result = FileDialogResultEnum.ok;
@@ -121,7 +121,7 @@ public class NewFileDialog extends JDialog {
 					ElectronicDocument ed = new ElectronicDocument(fileSplit[fileSplit.length - 1], filepath);
 					((MotClef) motClefList.getSelectedItem()).addDocument(ed);
 					
-					NewFileDialog.this.setVisible(false);
+					NewElectronicDocumentDialog.this.setVisible(false);
 				}
 			});
 			buttonPane.add(okButton);
@@ -132,7 +132,7 @@ public class NewFileDialog extends JDialog {
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					result = FileDialogResultEnum.canceled;
-					NewFileDialog.this.setVisible(false);
+					NewElectronicDocumentDialog.this.setVisible(false);
 				}
 			});
 			cancelButton.setActionCommand("Cancel");

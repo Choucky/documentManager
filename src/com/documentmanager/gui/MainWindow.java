@@ -325,7 +325,7 @@ public class MainWindow {
 		JMenuItem mntmDocumentElectronique = new JMenuItem("Document electronique...");
 		mntmDocumentElectronique.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				NewFileDialog nfd = new NewFileDialog(domaine);
+				NewElectronicDocumentDialog nfd = new NewElectronicDocumentDialog(domaine);
 				nfd.setVisible(true);
 				if (nfd.getResult() == FileDialogResultEnum.ok) {
 					updateFileList();
