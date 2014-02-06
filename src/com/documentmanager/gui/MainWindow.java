@@ -190,7 +190,7 @@ public class MainWindow {
 		//Trouver les domaines
 		File[] files = findDomains();
 		for (File f : files) {
-			String domaine_nom = f.getName().replace(".bin", "");
+			String domaine_nom = f.getName().replace(FILE_EXTENSION, "");
 			domainesComboBox.addItem(domaine_nom);
 			domaines.add(domaine_nom);
 		}
@@ -498,7 +498,7 @@ public class MainWindow {
 		return new File(".").listFiles(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".bin");
+				return name.endsWith(FILE_EXTENSION);
 			}
 		});
 	}
