@@ -119,7 +119,13 @@ public class NewElectronicDocumentDialog extends JDialog {
 					String[] fileSplit = filepath.split("/");
 					
 					ElectronicDocument ed = new ElectronicDocument(fileSplit[fileSplit.length - 1], filepath);
-					((MotClef) motClefList.getSelectedItem()).addDocument(ed);
+					MotClef mot = (MotClef) motClefList.getSelectedItem();
+					ed.addMotClef(mot);
+					try {
+						mot.addDocument(ed);
+					} catch (CloneNotSupportedException e) {
+						System.err.println("Etonnant : un fichier a deux critères identiques à sa création.");
+					}
 					
 					NewElectronicDocumentDialog.this.setVisible(false);
 				}

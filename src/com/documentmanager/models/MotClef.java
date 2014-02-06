@@ -13,8 +13,13 @@ public class MotClef implements Serializable{
 		documents = new ArrayList<Document>();
 	}
 	
-	public void addDocument(Document d) {
-		documents.add(d);
+	public void addDocument(Document doc) throws CloneNotSupportedException {
+		for (Document d : documents) {
+			if (doc.equals(d)) {
+				throw new CloneNotSupportedException("Le mot clef est déja assigné au fichier.");
+			}
+		}
+		documents.add(doc);
 	}
 	
 	public String toString() {

@@ -56,4 +56,15 @@ public class Domaine implements Serializable{
 		return criteres;
 	}
 	
+	public CategorieMotClef findCategorieOf(MotClef mot) {
+		for (CategorieMotClef c : categories) {
+			for (MotClef m : c.getMotClefs()) {
+				if (m.equals(mot)) {
+					return c;
+				}
+			}
+		}
+		return null;
+	}
+	
 }

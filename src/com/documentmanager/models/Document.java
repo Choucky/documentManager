@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public abstract class Document implements Serializable{
 	private String titre;
-	private ArrayList<CategorieMotClef> categories;
+	private ArrayList<MotClef> motClefs;
 	private ArrayList<Note> notes;
 	
 	public Document(String titre) {
 		this.titre = titre;
-		categories = new ArrayList<CategorieMotClef>();
+		motClefs = new ArrayList<MotClef>();
 		notes = new ArrayList<Note>();
 	}
 	
@@ -43,4 +43,13 @@ public abstract class Document implements Serializable{
 	public void deleteNote(Note n) {
 		notes.remove(n);
 	}
+	
+	public void addMotClef(MotClef m) {
+		motClefs.add(m);
+	}
+	
+	public ArrayList<MotClef> getMotClefs() {
+		return motClefs;
+	}
+	
 }

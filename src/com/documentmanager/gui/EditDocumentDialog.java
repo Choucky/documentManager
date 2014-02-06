@@ -17,6 +17,7 @@ import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Critere;
 import com.documentmanager.models.Document;
 import com.documentmanager.models.Domaine;
+import com.documentmanager.models.MotClef;
 import com.documentmanager.models.Note;
 
 import java.awt.event.ActionListener;
@@ -49,6 +50,7 @@ public class EditDocumentDialog extends JDialog {
 	private JList critereListDocument;
 	private JComboBox motClefCatList;
 	private JComboBox motClefList;
+	private JList motClefListDocument;
 
 	public EditDocumentDialog(Document doc, Domaine dom) {
 		document = doc;
@@ -99,8 +101,12 @@ public class EditDocumentDialog extends JDialog {
 		motClefCatList = new JComboBox();
 		motClefCatList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs())); 
-				motClefList.setSelectedIndex(0);
+				motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
+				try {
+					motClefList.setSelectedIndex(0);
+				} catch (IllegalArgumentException e) {
+					System.err.println("Pas de mot clefs pour cette catégorie.");
+				}
 			}
 		});
 		motClefCatList.setBounds(12, 24, 170, 24);
@@ -109,6 +115,20 @@ public class EditDocumentDialog extends JDialog {
 		panel.add(motClefCatList);
 		
 		JButton button = new JButton("+");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				MotClef mot = (MotClef) motClefList.getSelectedItem();
+				try {
+					mot.addDocument(document);
+					document.addMotClef(mot);
+				} catch (CloneNotSupportedException e) {
+					javax.swing.JOptionPane.showMessageDialog(EditDocumentDialog.this,"Impossible d'assigner le mot clef : " + e.getMessage());
+				}
+				
+				
+				populateLists();
+			}
+		});
 		button.setBounds(367, 24, 45, 25);
 		panel.add(button);
 		
@@ -116,7 +136,7 @@ public class EditDocumentDialog extends JDialog {
 		scrollPane_1.setBounds(12, 60, 400, 119);
 		panel.add(scrollPane_1);
 		
-		JList motClefListDocument = new JList();
+		motClefListDocument = new JList();
 		motClefListDocument.setToolTipText("Double-cliquez pour effacer un mot clef.");
 		motClefListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(motClefListDocument);
@@ -135,7 +155,12 @@ public class EditDocumentDialog extends JDialog {
 		critereList.setBounds(12, 24, 169, 24);
 		critereList.setModel(new CritereListModel(new ArrayList<Critere>()));
 		critereList.setModel(new CritereListModel(domaine.getCriteres()));
-		critereList.setSelectedIndex(0);
+		try {
+			critereList.setSelectedIndex(0);
+		} catch (IllegalArgumentException e) {
+			System.err.println("Aucun critère.");
+		}
+		
 		panel_1.add(critereList);
 		
 		JButton button_1 = new JButton("+");
@@ -219,7 +244,7 @@ public class EditDocumentDialog extends JDialog {
 	
 	private void populateLists() {
 		critereListDocument.setModel(new NoteListModel(document.getNotes()));
-		
+		motClefListDocument.setModel(new DocumentMotClefListModel(document,domaine));
 	}
 	
 }

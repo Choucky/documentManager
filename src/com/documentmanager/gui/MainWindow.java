@@ -429,7 +429,11 @@ public class MainWindow {
 		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
 			for (MotClef m : c.getMotClefs()) {
 				for (Document d : m.getDocuments()) {
-					flm.add(d);
+					try {
+						flm.add(d);
+					} catch(IllegalArgumentException e) {
+						System.err.println(e.getMessage());
+					}
 				}
 			}
 		}
