@@ -13,8 +13,6 @@ import javax.swing.JLabel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
@@ -22,7 +20,6 @@ import javax.swing.border.TitledBorder;
 
 import com.documentmanager.models.CategorieMotClef;
 import com.documentmanager.models.Domaine;
-import com.documentmanager.models.ElectronicDocument;
 import com.documentmanager.models.MotClef;
 import com.documentmanager.models.PaperDocument;
 
@@ -45,18 +42,18 @@ public class NewPaperDocumentDialog extends JDialog {
 		contentPanel.setLayout(null);
 
 		commentaireTextField = new JTextField();
-		commentaireTextField.setBounds(147, 77, 271, 25);
+		commentaireTextField.setBounds(147, 49, 271, 25);
 		contentPanel.add(commentaireTextField);
 		commentaireTextField.setColumns(10);
 
 		JLabel lblCommentaire = new JLabel("Commentaire :");
 		lblCommentaire.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCommentaire.setBounds(29, 82, 117, 15);
+		lblCommentaire.setBounds(29, 54, 117, 15);
 		contentPanel.add(lblCommentaire);
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Mot clef de d\u00E9part", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(12, 126, 406, 94);
+		panel.setBounds(12, 98, 406, 94);
 		contentPanel.add(panel);
 		panel.setLayout(null);
 		{
@@ -91,12 +88,12 @@ public class NewPaperDocumentDialog extends JDialog {
 		
 		titreTextField = new JTextField();
 		titreTextField.setColumns(10);
-		titreTextField.setBounds(147, 40, 271, 25);
+		titreTextField.setBounds(147, 12, 271, 25);
 		contentPanel.add(titreTextField);
 		
 		JLabel labelTitre = new JLabel("Titre :");
 		labelTitre.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelTitre.setBounds(29, 45, 117, 15);
+		labelTitre.setBounds(29, 17, 117, 15);
 		contentPanel.add(labelTitre);
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -113,8 +110,6 @@ public class NewPaperDocumentDialog extends JDialog {
 						return;
 					}
 					result = FileDialogResultEnum.ok;
-					String filepath = commentaireTextField.getText();
-					String[] fileSplit = filepath.split("/");
 					
 					PaperDocument pd = new PaperDocument(titreTextField.getText(), commentaireTextField.getText());
 					MotClef mot = (MotClef) motClefList.getSelectedItem();

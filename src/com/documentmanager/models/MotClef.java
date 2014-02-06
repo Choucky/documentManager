@@ -29,5 +29,9 @@ public class MotClef implements Serializable{
 	public ArrayList<Document> getDocuments() {
 		return documents;
 	}
+
+	public void removeDocument(Document document) {
+		documents.remove(document);
+	}
 	
 }

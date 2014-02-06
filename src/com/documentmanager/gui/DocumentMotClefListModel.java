@@ -23,7 +23,10 @@ public class DocumentMotClefListModel extends AbstractListModel {
 	@Override
 	public Object getElementAt(int arg0) {
 		return new String(domaine.findCategorieOf(motClefs.get(arg0)).toString() + " - " + motClefs.get(arg0).toString());
-		//return motClefs.get(arg0);
+	}
+	
+	public MotClef getMotClefAt(int arg0) {
+		return motClefs.get(arg0);
 	}
 
 	@Override

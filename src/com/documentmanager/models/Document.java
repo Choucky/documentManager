@@ -51,5 +51,9 @@ public abstract class Document implements Serializable{
 	public ArrayList<MotClef> getMotClefs() {
 		return motClefs;
 	}
+
+	public void removeMotClef(MotClef mot) {
+		motClefs.remove(mot);
+	}
 	
 }

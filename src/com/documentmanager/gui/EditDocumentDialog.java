@@ -137,6 +137,26 @@ public class EditDocumentDialog extends JDialog {
 		panel.add(scrollPane_1);
 		
 		motClefListDocument = new JList();
+		motClefListDocument.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JList source = (JList) arg0.getSource();
+				if (source.getSelectedValue() == null) {
+					return;
+				}
+				if (arg0.getClickCount() == 2 ) {
+					if (source.getModel().getSize() == 1) {
+						javax.swing.JOptionPane.showMessageDialog(EditDocumentDialog.this,"Vous ne pouvez pas supprimer le dernier mot clef !");
+						return;
+					}
+					DocumentMotClefListModel dmclm = (DocumentMotClefListModel) source.getModel();
+					MotClef mot = dmclm.getMotClefAt(source.getSelectedIndex());
+					mot.removeDocument(document);
+					document.removeMotClef(mot);
+					populateLists();
+				}
+			}
+		});
 		motClefListDocument.setToolTipText("Double-cliquez pour effacer un mot clef.");
 		motClefListDocument.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(motClefListDocument);
@@ -227,19 +247,6 @@ public class EditDocumentDialog extends JDialog {
 			}
 		}
 		populateLists();
-	}
-	
-	private ArrayList<?> substractLists(ArrayList<?> list1, ArrayList<?> list2) {
-		ArrayList<?> result = (ArrayList<?>) list1.clone();
-		
-		for (Object o : list2) {
-			int index = result.indexOf(o);
-			if (index != -1) {
-				result.remove(index);
-			}
-		}
-		
-		return result;
 	}
 	
 	private void populateLists() {
