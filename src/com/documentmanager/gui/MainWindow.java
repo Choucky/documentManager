@@ -395,6 +395,9 @@ public class MainWindow {
 		JMenuItem mntmAjouterUnCritre = new JMenuItem("Ajouter un critère...");
 		mntmAjouterUnCritre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (!domaineExists()) {
+					return;
+				}
 				String critere = JOptionPane.showInputDialog("Veuillez indiquer le nom du critère :");
 				if (critere.equals("")) {
 					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom de critère saisi, le critère ne sera PAS créé.");
