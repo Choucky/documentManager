@@ -213,9 +213,17 @@ public class MainWindow {
 		critereList.setMinimumSize(new Dimension(125, 24));
 		panel_2.add(critereList);
 
-		JButton button = new JButton("+");
-		button.setBounds(138, 20, 44, 25);
-		panel_2.add(button);
+		JButton critereBtn = new JButton("+");
+		critereBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (critereList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un critère.");
+					return;
+				}
+			}
+		});
+		critereBtn.setBounds(138, 20, 44, 25);
+		panel_2.add(critereBtn);
 
 		JPanel panel_4 = new JPanel();
 		panel_4.setBounds(5, 82, 190, 87);
