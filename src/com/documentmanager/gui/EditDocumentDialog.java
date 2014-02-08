@@ -191,6 +191,11 @@ public class EditDocumentDialog extends JDialog {
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Critere critere = (Critere) critereList.getSelectedItem();
+				if (critere == null) {
+					javax.swing.JOptionPane.showMessageDialog(EditDocumentDialog.this,"Vous devez créer un critère.");
+					return;
+
+				}
 				Etoile star = (Etoile) noteList.getSelectedItem();
 				
 				Note note = document.findNoteOf(critere);
