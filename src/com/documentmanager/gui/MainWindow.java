@@ -261,9 +261,22 @@ public class MainWindow {
 		motClefCatList.setMinimumSize(new Dimension(125, 24));
 		panel_4.add(motClefCatList);
 
-		JButton button_2 = new JButton("+");
-		button_2.setBounds(138, 51, 44, 25);
-		panel_4.add(button_2);
+		JButton motClefBtn = new JButton("+");
+		motClefBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (motClefCatList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
+					return;
+				}
+				if (motClefList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
+					return;
+				}
+				
+			}
+		});
+		motClefBtn.setBounds(138, 51, 44, 25);
+		panel_4.add(motClefBtn);
 
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(5, 170, 190, 315);
