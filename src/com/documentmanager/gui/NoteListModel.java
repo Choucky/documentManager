@@ -28,12 +28,4 @@ public class NoteListModel extends AbstractListModel {
 		return notes.size();
 	}
 	
-	/*public void clear() {
-		notes.clear();
-	}
-	
-	public void addNote(Note n) {
-		notes.add(n);
-	}*/
-	
 }

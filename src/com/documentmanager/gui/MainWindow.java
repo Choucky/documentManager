@@ -24,7 +24,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import javax.swing.ListModel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
@@ -57,7 +56,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.GridLayout;
