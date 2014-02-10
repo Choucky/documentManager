@@ -51,6 +51,9 @@ import java.io.ObjectOutputStream;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class MainWindow {
 
@@ -197,18 +200,24 @@ public class MainWindow {
 		panel.setPreferredSize(new Dimension(200, 10));
 		panel.setSize(new Dimension(200, 0));
 		panel.setMinimumSize(new Dimension(200, 10));
-		panel.setBorder(new TitledBorder(null, "Recherche", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Filtres", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
-		panel.setLayout(null);
+		panel.setLayout(new GridLayout(2, 1, 0, 0));
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panel.add(panel_6);
+		panel_6.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(5, 20, 190, 61);
-		panel_2.setBorder(new TitledBorder(null, "Ajouter un crit\u00E8re", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.add(panel_2);
+		panel_2.setPreferredSize(new Dimension(10, 25));
+		panel_2.setMinimumSize(new Dimension(10, 25));
+		panel_6.add(panel_2, BorderLayout.NORTH);
+		panel_2.setBorder(null);
 		panel_2.setLayout(null);
 
 		critereList = new JComboBox();
-		critereList.setBounds(8, 20, 125, 24);
+		critereList.setBounds(0, 0, 125, 24);
 		critereList.setPreferredSize(new Dimension(125, 24));
 		critereList.setMinimumSize(new Dimension(125, 24));
 		panel_2.add(critereList);
@@ -222,75 +231,82 @@ public class MainWindow {
 				}
 			}
 		});
-		critereBtn.setBounds(138, 20, 44, 25);
+		critereBtn.setBounds(130, 0, 44, 25);
 		panel_2.add(critereBtn);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		panel_6.add(scrollPane_2, BorderLayout.CENTER);
+		
+		JList list_1 = new JList();
+		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_1.setToolTipText("Double-cliquez pour effacer un critère.");
+		scrollPane_2.setViewportView(list_1);
 
 		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(5, 82, 190, 87);
-		panel_4.setBorder(new TitledBorder(null, "Ajouter un mot clef", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_4.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		panel.add(panel_4);
-		panel_4.setLayout(null);
-
-		motClefList = new JComboBox();
-		motClefList.setBounds(12, 51, 125, 24);
-		motClefList.setPreferredSize(new Dimension(125, 24));
-		motClefList.setMinimumSize(new Dimension(125, 24));
-		panel_4.add(motClefList);
-
-		motClefCatList = new JComboBox();
-		motClefCatList.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JComboBox motClefCatList = (JComboBox) arg0.getSource();
-				if (motClefCatList.getSelectedItem() == null) {
-					return;
-				}
-				try {
-					motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
-				} catch (ClassCastException e) {
-					System.err.println("Etonnant : Des objets ne se cast pas comme il faudrait !");
-				}
-				try {
-					motClefList.setSelectedIndex(0);
-				} catch (IllegalArgumentException e) {
-					System.err.println("Liste de mot clefs vide.");
-				}
-			}
-		});
-		motClefCatList.setBounds(12, 24, 170, 24);
-		motClefCatList.setPreferredSize(new Dimension(125, 24));
-		motClefCatList.setMinimumSize(new Dimension(125, 24));
-		panel_4.add(motClefCatList);
-
-		JButton motClefBtn = new JButton("+");
-		motClefBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (motClefCatList.getSelectedItem() == null) {
-					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
-					return;
-				}
-				if (motClefList.getSelectedItem() == null) {
-					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
-					return;
-				}
-				
-			}
-		});
-		motClefBtn.setBounds(138, 51, 44, 25);
-		panel_4.add(motClefBtn);
-
-		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(5, 170, 190, 315);
-		panel_5.setBorder(new TitledBorder(null, "Filtres actuels", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.add(panel_5);
-		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
-
-		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
-		scrollPane_1.setToolTipText("Double cliquez sur un filtre pour le supprimer.");
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		panel_5.add(scrollPane_1);
+		panel_4.setLayout(new BorderLayout(0, 0));
 		
-		JList list = new JList();
-		scrollPane_1.setViewportView(list);
+		JPanel panel_5 = new JPanel();
+		panel_5.setPreferredSize(new Dimension(170, 54));
+		panel_5.setMinimumSize(new Dimension(170, 54));
+		panel_4.add(panel_5, BorderLayout.NORTH);
+		panel_5.setLayout(null);
+		
+				JButton motClefBtn = new JButton("+");
+				motClefBtn.setBounds(126, 27, 44, 25);
+				panel_5.add(motClefBtn);
+				
+						motClefCatList = new JComboBox();
+						motClefCatList.setBounds(0, 0, 170, 24);
+						panel_5.add(motClefCatList);
+						motClefCatList.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								JComboBox motClefCatList = (JComboBox) arg0.getSource();
+								if (motClefCatList.getSelectedItem() == null) {
+									return;
+								}
+								try {
+									motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
+								} catch (ClassCastException e) {
+									System.err.println("Etonnant : Des objets ne se cast pas comme il faudrait !");
+								}
+								try {
+									motClefList.setSelectedIndex(0);
+								} catch (IllegalArgumentException e) {
+									System.err.println("Liste de mot clefs vide.");
+								}
+							}
+						});
+						motClefCatList.setPreferredSize(new Dimension(125, 24));
+						motClefCatList.setMinimumSize(new Dimension(125, 24));
+						
+								motClefList = new JComboBox();
+								motClefList.setBounds(0, 27, 125, 24);
+								panel_5.add(motClefList);
+								motClefList.setPreferredSize(new Dimension(125, 24));
+								motClefList.setMinimumSize(new Dimension(125, 24));
+								
+								JScrollPane scrollPane_1 = new JScrollPane();
+								panel_4.add(scrollPane_1, BorderLayout.CENTER);
+								
+								JList list = new JList();
+								list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+								list.setToolTipText("Double-cliquez pour effacer un mot clef.");
+								scrollPane_1.setViewportView(list);
+				motClefBtn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if (motClefCatList.getSelectedItem() == null) {
+							javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
+							return;
+						}
+						if (motClefList.getSelectedItem() == null) {
+							javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
+							return;
+						}
+						
+					}
+				});
 
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);
