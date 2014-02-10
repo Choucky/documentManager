@@ -129,10 +129,10 @@ public class MainWindow {
 			}
 		});
 
-		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		frmDocumentmanager.getContentPane().add(panel_3, BorderLayout.WEST);
-		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
+		JPanel panelFichiers = new JPanel();
+		panelFichiers.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		frmDocumentmanager.getContentPane().add(panelFichiers, BorderLayout.WEST);
+		panelFichiers.setLayout(new BoxLayout(panelFichiers, BoxLayout.X_AXIS));
 
 		listeFichiers = new JList();
 		listeFichiers.addMouseListener(new MouseAdapter() {
@@ -151,23 +151,23 @@ public class MainWindow {
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listeFichiers.setModel(new FileListModel());
 
-		JScrollPane scrollPane = new JScrollPane(listeFichiers);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		panel_3.add(scrollPane);
+		JScrollPane scrollFichiers = new JScrollPane(listeFichiers);
+		scrollFichiers.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		panelFichiers.add(scrollFichiers);
 
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		frmDocumentmanager.getContentPane().add(toolBar, BorderLayout.NORTH);
 
-		JPanel panel_1 = new JPanel();
-		toolBar.add(panel_1);
-		panel_1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		JPanel panelToolbar = new JPanel();
+		toolBar.add(panelToolbar);
+		panelToolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		txtDomaine = new JLabel();
 		txtDomaine.setHorizontalAlignment(SwingConstants.CENTER);
 		txtDomaine.setPreferredSize(new Dimension(75, 24));
 		txtDomaine.setMinimumSize(new Dimension(75, 24));
-		panel_1.add(txtDomaine);
+		panelToolbar.add(txtDomaine);
 		txtDomaine.setText("Domaine :");
 
 		domainesComboBox = new JComboBox();
@@ -194,33 +194,33 @@ public class MainWindow {
 			domaines.add(domaine_nom);
 		}
 
-		panel_1.add(domainesComboBox);
+		panelToolbar.add(domainesComboBox);
 
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(200, 10));
-		panel.setSize(new Dimension(200, 0));
-		panel.setMinimumSize(new Dimension(200, 10));
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Filtres", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		frmDocumentmanager.getContentPane().add(panel, BorderLayout.EAST);
-		panel.setLayout(new GridLayout(2, 1, 0, 0));
+		JPanel panelFiltres = new JPanel();
+		panelFiltres.setPreferredSize(new Dimension(200, 10));
+		panelFiltres.setSize(new Dimension(200, 0));
+		panelFiltres.setMinimumSize(new Dimension(200, 10));
+		panelFiltres.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Filtres", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		frmDocumentmanager.getContentPane().add(panelFiltres, BorderLayout.EAST);
+		panelFiltres.setLayout(new GridLayout(2, 1, 0, 0));
 		
-		JPanel panel_6 = new JPanel();
-		panel_6.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panel.add(panel_6);
-		panel_6.setLayout(new BorderLayout(0, 0));
+		JPanel panelCriteres = new JPanel();
+		panelCriteres.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelFiltres.add(panelCriteres);
+		panelCriteres.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setPreferredSize(new Dimension(10, 25));
-		panel_2.setMinimumSize(new Dimension(10, 25));
-		panel_6.add(panel_2, BorderLayout.NORTH);
-		panel_2.setBorder(null);
-		panel_2.setLayout(null);
+		JPanel panelCriteresSelect = new JPanel();
+		panelCriteresSelect.setPreferredSize(new Dimension(10, 25));
+		panelCriteresSelect.setMinimumSize(new Dimension(10, 25));
+		panelCriteres.add(panelCriteresSelect, BorderLayout.NORTH);
+		panelCriteresSelect.setBorder(null);
+		panelCriteresSelect.setLayout(null);
 
 		critereList = new JComboBox();
 		critereList.setBounds(0, 0, 125, 24);
 		critereList.setPreferredSize(new Dimension(125, 24));
 		critereList.setMinimumSize(new Dimension(125, 24));
-		panel_2.add(critereList);
+		panelCriteresSelect.add(critereList);
 
 		JButton critereBtn = new JButton("+");
 		critereBtn.addActionListener(new ActionListener() {
@@ -232,34 +232,34 @@ public class MainWindow {
 			}
 		});
 		critereBtn.setBounds(130, 0, 44, 25);
-		panel_2.add(critereBtn);
+		panelCriteresSelect.add(critereBtn);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		panel_6.add(scrollPane_2, BorderLayout.CENTER);
+		JScrollPane scrollCriteres = new JScrollPane();
+		panelCriteres.add(scrollCriteres, BorderLayout.CENTER);
 		
-		JList list_1 = new JList();
-		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_1.setToolTipText("Double-cliquez pour effacer un critère.");
-		scrollPane_2.setViewportView(list_1);
+		JList listeCriteres = new JList();
+		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listeCriteres.setToolTipText("Double-cliquez pour effacer un critère.");
+		scrollCriteres.setViewportView(listeCriteres);
 
-		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
-		panel.add(panel_4);
-		panel_4.setLayout(new BorderLayout(0, 0));
+		JPanel panelMots = new JPanel();
+		panelMots.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		panelFiltres.add(panelMots);
+		panelMots.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_5 = new JPanel();
-		panel_5.setPreferredSize(new Dimension(170, 54));
-		panel_5.setMinimumSize(new Dimension(170, 54));
-		panel_4.add(panel_5, BorderLayout.NORTH);
-		panel_5.setLayout(null);
+		JPanel panelMotsSelect = new JPanel();
+		panelMotsSelect.setPreferredSize(new Dimension(170, 54));
+		panelMotsSelect.setMinimumSize(new Dimension(170, 54));
+		panelMots.add(panelMotsSelect, BorderLayout.NORTH);
+		panelMotsSelect.setLayout(null);
 		
 				JButton motClefBtn = new JButton("+");
 				motClefBtn.setBounds(126, 27, 44, 25);
-				panel_5.add(motClefBtn);
+				panelMotsSelect.add(motClefBtn);
 				
 						motClefCatList = new JComboBox();
 						motClefCatList.setBounds(0, 0, 170, 24);
-						panel_5.add(motClefCatList);
+						panelMotsSelect.add(motClefCatList);
 						motClefCatList.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
 								JComboBox motClefCatList = (JComboBox) arg0.getSource();
@@ -283,17 +283,17 @@ public class MainWindow {
 						
 								motClefList = new JComboBox();
 								motClefList.setBounds(0, 27, 125, 24);
-								panel_5.add(motClefList);
+								panelMotsSelect.add(motClefList);
 								motClefList.setPreferredSize(new Dimension(125, 24));
 								motClefList.setMinimumSize(new Dimension(125, 24));
 								
-								JScrollPane scrollPane_1 = new JScrollPane();
-								panel_4.add(scrollPane_1, BorderLayout.CENTER);
+								JScrollPane scrollMots = new JScrollPane();
+								panelMots.add(scrollMots, BorderLayout.CENTER);
 								
-								JList list = new JList();
-								list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-								list.setToolTipText("Double-cliquez pour effacer un mot clef.");
-								scrollPane_1.setViewportView(list);
+								JList listMots = new JList();
+								listMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+								listMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
+								scrollMots.setViewportView(listMots);
 				motClefBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (motClefCatList.getSelectedItem() == null) {
