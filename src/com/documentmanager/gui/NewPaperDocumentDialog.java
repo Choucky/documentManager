@@ -35,7 +35,7 @@ public class NewPaperDocumentDialog extends JDialog {
 		setResizable(false);
 		setTitle("Choisir un fichier papier");
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setBounds(100, 100, 450, 267);
+		setBounds(100, 100, 450, 280);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -95,6 +95,11 @@ public class NewPaperDocumentDialog extends JDialog {
 		labelTitre.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelTitre.setBounds(29, 17, 117, 15);
 		contentPanel.add(labelTitre);
+		
+		JLabel label = new JLabel("Vous pourrez ajouter des critères et de nouveau mot clefs après l'ajout.");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(12, 193, 406, 15);
+		contentPanel.add(label);
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);

@@ -62,6 +62,7 @@ public class NewElectronicDocumentDialog extends JDialog {
 		fileTextField.setColumns(10);
 
 		JLabel lblFichier = new JLabel("Fichier :");
+		lblFichier.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblFichier.setBounds(12, 17, 60, 15);
 		contentPanel.add(lblFichier);
 
@@ -99,6 +100,11 @@ public class NewElectronicDocumentDialog extends JDialog {
 
 		catMotClefList.setBounds(210, 24, 184, 24);
 		panel.add(catMotClefList);
+		
+		JLabel lblVousPourrezAjouter = new JLabel("Vous pourrez ajouter des critères et de nouveau mot clefs après l'ajout.");
+		lblVousPourrezAjouter.setHorizontalAlignment(SwingConstants.CENTER);
+		lblVousPourrezAjouter.setBounds(12, 151, 406, 15);
+		contentPanel.add(lblVousPourrezAjouter);
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
