@@ -24,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import javax.swing.ListModel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
@@ -87,6 +88,8 @@ public class MainWindow {
 	private JComboBox motClefList;
 
 	private JList listeCriteres;
+
+	private JList listeMots;
 
 	/**
 	 * Launch the application.
@@ -322,10 +325,10 @@ public class MainWindow {
 								JScrollPane scrollMots = new JScrollPane();
 								panelMots.add(scrollMots, BorderLayout.CENTER);
 								
-								JList listMots = new JList();
-								listMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-								listMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
-								scrollMots.setViewportView(listMots);
+								listeMots = new JList();
+								listeMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+								listeMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
+								scrollMots.setViewportView(listeMots);
 				motClefBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (motClefCatList.getSelectedItem() == null) {
@@ -517,13 +520,32 @@ public class MainWindow {
 	private void updateFileList() {
 		FileListModel flm = (FileListModel) listeFichiers.getModel();
 		flm.clear();
-		for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
-			for (MotClef m : c.getMotClefs()) {
-				for (Document d : m.getDocuments()) {
-					try {
-						flm.add(d);
-					} catch(IllegalArgumentException e) {
-						System.err.println(e.getMessage());
+		CritereListModel criteresModel = (CritereListModel) listeCriteres.getModel();
+		ListModel motsModel = listeMots.getModel();
+		if (criteresModel.getSize() != 0 || motsModel.getSize() != 0) {
+			//Critères
+			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
+				for (MotClef m : c.getMotClefs()) {
+					for (Document d : m.getDocuments()) {
+						for (Critere cr : criteresModel.getCriteres()) {
+							if (d.findNoteOf(cr) != null) {
+								flm.add(d);
+							}
+						}
+					}
+				}
+			}
+			//Mot clefs
+			
+		} else {
+			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
+				for (MotClef m : c.getMotClefs()) {
+					for (Document d : m.getDocuments()) {
+						try {
+							flm.add(d);
+						} catch(IllegalArgumentException e) {
+							System.err.println(e.getMessage());
+						}
 					}
 				}
 			}

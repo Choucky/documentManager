@@ -58,5 +58,9 @@ public class CritereListModel extends AbstractListModel implements ComboBoxModel
 	private void fireContentsChanged() {
 		fireContentsChanged(this, 0, getSize()-1);
 	}
+	
+	public ArrayList<Critere> getCriteres() {
+		return (ArrayList<Critere>) criteres.clone();
+	}
 
 }
