@@ -16,6 +16,10 @@ public class MotClefListModel extends AbstractListModel implements ComboBoxModel
 		this.motclefs = motclefs;
 	}
 	
+	public MotClefListModel() {
+		motclefs = new ArrayList<MotClef>();
+	}
+
 	@Override
 	public Object getElementAt(int arg0) {
 		return motclefs.get(arg0);
@@ -34,7 +38,24 @@ public class MotClefListModel extends AbstractListModel implements ComboBoxModel
 	@Override
 	public void setSelectedItem(Object arg0) {
 		selection = arg0;
+		fireContentsChanged();
+	}
+
+	private void fireContentsChanged() {
 		fireContentsChanged(this, 0, getSize()-1);
 	}
 
+	public ArrayList<MotClef> getMotClefs() {
+		return (ArrayList<MotClef>) motclefs.clone();
+	}
+
+	public void add(MotClef m) {
+		motclefs.add(m);
+		fireContentsChanged();
+	}
+
+	public void delete(MotClef m) {
+		motclefs.remove(m);
+		fireContentsChanged();
+	}
 }

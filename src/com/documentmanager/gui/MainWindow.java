@@ -326,6 +326,18 @@ public class MainWindow {
 								panelMots.add(scrollMots, BorderLayout.CENTER);
 								
 								listeMots = new JList();
+								listeMots.addMouseListener(new MouseAdapter() {
+									@Override
+									public void mouseClicked(MouseEvent arg0) {
+										JList source = (JList) arg0.getSource();
+										if (source.getSelectedValue() == null || arg0.getClickCount() != 2) {
+											return;
+										}
+										((MotClefListModel) source.getModel()).delete((MotClef) source.getSelectedValue());
+										updateFileList();
+									}
+								});
+								listeMots.setModel(new MotClefListModel());
 								listeMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 								listeMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
 								scrollMots.setViewportView(listeMots);
@@ -339,7 +351,8 @@ public class MainWindow {
 							javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
 							return;
 						}
-						
+						((MotClefListModel) listeMots.getModel()).add((MotClef) motClefList.getSelectedItem());
+						updateFileList();
 					}
 				});
 
@@ -521,7 +534,7 @@ public class MainWindow {
 		FileListModel flm = (FileListModel) listeFichiers.getModel();
 		flm.clear();
 		CritereListModel criteresModel = (CritereListModel) listeCriteres.getModel();
-		ListModel motsModel = listeMots.getModel();
+		MotClefListModel motsModel = (MotClefListModel) listeMots.getModel();
 		if (criteresModel.getSize() != 0 || motsModel.getSize() != 0) {
 			//Critères
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
@@ -535,7 +548,13 @@ public class MainWindow {
 					}
 				}
 			}
+			
 			//Mot clefs
+			for (MotClef m : motsModel.getMotClefs()) {
+				for (Document d : m.getDocuments()) {
+					flm.add(d);
+				}
+			}
 			
 		} else {
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
