@@ -144,7 +144,7 @@ public class MainWindow {
 
 		JPanel panelFichiers = new JPanel();
 		panelFichiers.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		frmDocumentmanager.getContentPane().add(panelFichiers, BorderLayout.WEST);
+		frmDocumentmanager.getContentPane().add(panelFichiers, BorderLayout.CENTER);
 		panelFichiers.setLayout(new BoxLayout(panelFichiers, BoxLayout.X_AXIS));
 
 		listeFichiers = new JList();
