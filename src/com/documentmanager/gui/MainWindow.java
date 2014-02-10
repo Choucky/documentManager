@@ -6,7 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -22,15 +24,20 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+
 import java.awt.FlowLayout;
 import java.awt.Dimension;
+
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.BoxLayout;
+
 import java.util.ArrayList;
 
 import com.documentmanager.models.CategorieMotClef;
@@ -40,6 +47,7 @@ import com.documentmanager.models.Domaine;
 import com.documentmanager.models.MotClef;
 
 import javax.swing.JComboBox;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -52,7 +60,9 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.GridLayout;
+
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
 
 public class MainWindow {
@@ -75,6 +85,8 @@ public class MainWindow {
 	private JComboBox critereList;
 
 	private JComboBox motClefList;
+
+	private JList listeCriteres;
 
 	/**
 	 * Launch the application.
@@ -229,6 +241,14 @@ public class MainWindow {
 					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un critère.");
 					return;
 				}
+				
+				try {
+					((CritereListModel) listeCriteres.getModel()).addItem((Critere) critereList.getSelectedItem());
+				} catch (CloneNotSupportedException e) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,e.getMessage());
+					return;
+				}
+				updateFileList();
 			}
 		});
 		critereBtn.setBounds(130, 0, 44, 25);
@@ -237,7 +257,19 @@ public class MainWindow {
 		JScrollPane scrollCriteres = new JScrollPane();
 		panelCriteres.add(scrollCriteres, BorderLayout.CENTER);
 		
-		JList listeCriteres = new JList();
+		listeCriteres = new JList();
+		listeCriteres.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JList source = (JList) arg0.getSource();
+				if (arg0.getClickCount() != 2 || source.getSelectedValue() == null) {
+					return;
+				}
+				((CritereListModel) source.getModel()).removeItem((Critere) source.getSelectedValue());
+				updateFileList();
+			}
+		});
+		listeCriteres.setModel(new CritereListModel());
 		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listeCriteres.setToolTipText("Double-cliquez pour effacer un critère.");
 		scrollCriteres.setViewportView(listeCriteres);

@@ -12,6 +12,10 @@ public class CritereListModel extends AbstractListModel implements ComboBoxModel
 	private ArrayList<Critere> criteres;
 	private Object selection;
 	
+	public CritereListModel() {
+		criteres = new ArrayList<>();
+	}
+	
 	public CritereListModel(ArrayList<Critere> criteres) {
 		this.criteres = criteres;
 	}
@@ -37,7 +41,21 @@ public class CritereListModel extends AbstractListModel implements ComboBoxModel
 		fireContentsChanged();
 	}
 	
-	public void fireContentsChanged() {
+	public void addItem(Critere c) throws CloneNotSupportedException {
+		if (criteres.contains(c)) {
+			throw new CloneNotSupportedException("Ce critère est déja actif.");
+		} else {
+			criteres.add(c);
+			fireContentsChanged();
+		}
+	}
+	
+	public void removeItem(Critere c) {
+		criteres.remove(c);
+		fireContentsChanged();
+	}
+	
+	private void fireContentsChanged() {
 		fireContentsChanged(this, 0, getSize()-1);
 	}
 
