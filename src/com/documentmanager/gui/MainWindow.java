@@ -67,7 +67,7 @@ import java.awt.Color;
 public class MainWindow {
 
 	private JFrame frmDocumentmanager;
-	
+
 	public final String FILE_EXTENSION = ".obj";
 
 	//Composants
@@ -89,9 +89,24 @@ public class MainWindow {
 
 	private JList listeMots;
 
-	/**
-	 * Launch the application.
-	 */
+	private JMenuItem mntmNouveauMotClef;
+
+	private JMenuItem mntmAjouterUnCritre;
+
+	private JMenuItem mntmNouvelleCatgorieDe;
+
+	private JMenuItem mntmDocumentPapier;
+
+	private JMenuItem mntmDocumentElectronique;
+
+	private JMenuItem mntmQuitter;
+
+	private JMenuItem mntmNouveau;
+
+	private JButton critereBtn;
+
+	private JButton motClefBtn;
+
 	public static void main(String[] args) {
 		//Utilise le style système natif
 		try {
@@ -118,16 +133,19 @@ public class MainWindow {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public MainWindow() {
 		initialize();
+		createMenuBar();
+		addEvents();
+		
+		//Sélectionne le premier domaine pour initialiser l'interface
+		try {
+			domainesComboBox.setSelectedIndex(0);
+		} catch (IllegalArgumentException e) {
+			System.err.println("Impossible de sélectionner le premier domaine. Existe-t'il ?");
+		}
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		domaines = new ArrayList<String>();
 
@@ -136,11 +154,6 @@ public class MainWindow {
 		frmDocumentmanager.setBounds(100, 100, 800, 600);
 		frmDocumentmanager.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmDocumentmanager.getContentPane().setLayout(new BorderLayout(0, 0));
-		frmDocumentmanager.addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosed(java.awt.event.WindowEvent evt){
-				finish();
-			}
-		});
 
 		JPanel panelFichiers = new JPanel();
 		panelFichiers.setBorder(new TitledBorder(null, "Fichiers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -148,17 +161,6 @@ public class MainWindow {
 		panelFichiers.setLayout(new BoxLayout(panelFichiers, BoxLayout.X_AXIS));
 
 		listeFichiers = new JList();
-		listeFichiers.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				JList list = (JList)evt.getSource();
-				if (evt.getClickCount() != 2 || list.getSelectedValue() == null) {
-					return;
-				}
-				EditDocumentDialog efd = new EditDocumentDialog((Document) list.getSelectedValue(), domaine);
-				efd.setVisible(true);
-			}
-		});
 		listeFichiers.setToolTipText("Double cliquez sur un fichier pour modifier ses propriétés.");
 		listeFichiers.setPreferredSize(new Dimension(250, 0));
 		listeFichiers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -184,28 +186,10 @@ public class MainWindow {
 		txtDomaine.setText("Domaine :");
 
 		domainesComboBox = new JComboBox();
-		domainesComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JComboBox cb = (JComboBox)arg0.getSource();
-				String domaine_selection = (String)cb.getSelectedItem();
-				if (domaine != null) {
-					saveDomain();
-				}
-				if (ready && domaine_selection != null) {
-					loadDomain(domaine_selection);
-				}
-			}
-		});
 		domainesComboBox.setPreferredSize(new Dimension(200, 24));
 		domainesComboBox.setMinimumSize(new Dimension(200, 24));
 
-		//Trouver les domaines
-		File[] files = findDomains();
-		for (File f : files) {
-			String domaine_nom = f.getName().replace(FILE_EXTENSION, "");
-			domainesComboBox.addItem(domaine_nom);
-			domaines.add(domaine_nom);
-		}
+		findDomaines();
 
 		panelToolbar.add(domainesComboBox);
 
@@ -216,7 +200,7 @@ public class MainWindow {
 		panelFiltres.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Filtres", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		frmDocumentmanager.getContentPane().add(panelFiltres, BorderLayout.EAST);
 		panelFiltres.setLayout(new GridLayout(2, 1, 0, 0));
-		
+
 		JPanel panelCriteres = new JPanel();
 		panelCriteres.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Crit\u00E8res", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		panelFiltres.add(panelCriteres);
@@ -235,41 +219,14 @@ public class MainWindow {
 		critereList.setMinimumSize(new Dimension(125, 24));
 		panelCriteresSelect.add(critereList);
 
-		JButton critereBtn = new JButton("+");
-		critereBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (critereList.getSelectedItem() == null) {
-					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un critère.");
-					return;
-				}
-				
-				try {
-					((CritereListModel) listeCriteres.getModel()).addItem((Critere) critereList.getSelectedItem());
-				} catch (CloneNotSupportedException e) {
-					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,e.getMessage());
-					return;
-				}
-				updateFileList();
-			}
-		});
+		critereBtn = new JButton("+");
 		critereBtn.setBounds(130, 0, 44, 25);
 		panelCriteresSelect.add(critereBtn);
-		
+
 		JScrollPane scrollCriteres = new JScrollPane();
 		panelCriteres.add(scrollCriteres, BorderLayout.CENTER);
-		
+
 		listeCriteres = new JList();
-		listeCriteres.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				JList source = (JList) arg0.getSource();
-				if (arg0.getClickCount() != 2 || source.getSelectedValue() == null) {
-					return;
-				}
-				((CritereListModel) source.getModel()).removeItem((Critere) source.getSelectedValue());
-				updateFileList();
-			}
-		});
 		listeCriteres.setModel(new CritereListModel());
 		listeCriteres.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listeCriteres.setToolTipText("Double-cliquez pour effacer un critère.");
@@ -279,88 +236,103 @@ public class MainWindow {
 		panelMots.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Mots clefs", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		panelFiltres.add(panelMots);
 		panelMots.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panelMotsSelect = new JPanel();
 		panelMotsSelect.setPreferredSize(new Dimension(170, 54));
 		panelMotsSelect.setMinimumSize(new Dimension(170, 54));
 		panelMots.add(panelMotsSelect, BorderLayout.NORTH);
 		panelMotsSelect.setLayout(null);
-		
-				JButton motClefBtn = new JButton("+");
-				motClefBtn.setBounds(126, 27, 44, 25);
-				panelMotsSelect.add(motClefBtn);
-				
-						motClefCatList = new JComboBox();
-						motClefCatList.setBounds(0, 0, 170, 24);
-						panelMotsSelect.add(motClefCatList);
-						motClefCatList.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								JComboBox motClefCatList = (JComboBox) arg0.getSource();
-								if (motClefCatList.getSelectedItem() == null) {
-									return;
-								}
-								try {
-									motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
-								} catch (ClassCastException e) {
-									System.err.println("Etonnant : Des objets ne se cast pas comme il faudrait !");
-								}
-								try {
-									motClefList.setSelectedIndex(0);
-								} catch (IllegalArgumentException e) {
-									System.err.println("Liste de mot clefs vide.");
-								}
-							}
-						});
-						motClefCatList.setPreferredSize(new Dimension(125, 24));
-						motClefCatList.setMinimumSize(new Dimension(125, 24));
-						
-								motClefList = new JComboBox();
-								motClefList.setBounds(0, 27, 125, 24);
-								panelMotsSelect.add(motClefList);
-								motClefList.setPreferredSize(new Dimension(125, 24));
-								motClefList.setMinimumSize(new Dimension(125, 24));
-								
-								JScrollPane scrollMots = new JScrollPane();
-								panelMots.add(scrollMots, BorderLayout.CENTER);
-								
-								listeMots = new JList();
-								listeMots.addMouseListener(new MouseAdapter() {
-									@Override
-									public void mouseClicked(MouseEvent arg0) {
-										JList source = (JList) arg0.getSource();
-										if (source.getSelectedValue() == null || arg0.getClickCount() != 2) {
-											return;
-										}
-										((MotClefListModel) source.getModel()).delete((MotClef) source.getSelectedValue());
-										updateFileList();
-									}
-								});
-								listeMots.setModel(new MotClefListModel());
-								listeMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-								listeMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
-								scrollMots.setViewportView(listeMots);
-				motClefBtn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (motClefCatList.getSelectedItem() == null) {
-							javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
-							return;
-						}
-						if (motClefList.getSelectedItem() == null) {
-							javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
-							return;
-						}
-						((MotClefListModel) listeMots.getModel()).add((MotClef) motClefList.getSelectedItem());
-						updateFileList();
-					}
-				});
 
+		motClefBtn = new JButton("+");
+		motClefBtn.setBounds(126, 27, 44, 25);
+		panelMotsSelect.add(motClefBtn);
+
+		motClefCatList = new JComboBox();
+		motClefCatList.setBounds(0, 0, 170, 24);
+		panelMotsSelect.add(motClefCatList);
+		motClefCatList.setPreferredSize(new Dimension(125, 24));
+		motClefCatList.setMinimumSize(new Dimension(125, 24));
+
+		motClefList = new JComboBox();
+		motClefList.setBounds(0, 27, 125, 24);
+		panelMotsSelect.add(motClefList);
+		motClefList.setPreferredSize(new Dimension(125, 24));
+		motClefList.setMinimumSize(new Dimension(125, 24));
+
+		JScrollPane scrollMots = new JScrollPane();
+		panelMots.add(scrollMots, BorderLayout.CENTER);
+
+		listeMots = new JList();
+		listeMots.setModel(new MotClefListModel());
+		listeMots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listeMots.setToolTipText("Double-cliquez pour effacer un mot clef.");
+		scrollMots.setViewportView(listeMots);
+		
+		ready = true;
+	}
+
+	private void findDomaines() {
+		//Trouver les domaines
+		File[] files = findDomains();
+		for (File f : files) {
+			String domaine_nom = f.getName().replace(FILE_EXTENSION, "");
+			domainesComboBox.addItem(domaine_nom);
+			domaines.add(domaine_nom);
+		}
+	}
+
+	private void createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		frmDocumentmanager.setJMenuBar(menuBar);
 
 		JMenu mnDomaine = new JMenu("Domaine");
 		menuBar.add(mnDomaine);
 
-		JMenuItem mntmNouveau = new JMenuItem("Nouveau...");
+		mntmNouveau = new JMenuItem("Nouveau...");
+		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		mnDomaine.add(mntmNouveau);
+
+		JSeparator separator = new JSeparator();
+		mnDomaine.add(separator);
+
+		mntmQuitter = new JMenuItem("Quitter");
+		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
+		mnDomaine.add(mntmQuitter);
+
+		JMenu mnFichiers = new JMenu("Fichiers");
+		menuBar.add(mnFichiers);
+
+		JMenu mnNouveau = new JMenu("Nouveau");
+		mnFichiers.add(mnNouveau);
+
+		mntmDocumentElectronique = new JMenuItem("Document electronique...");
+		mnNouveau.add(mntmDocumentElectronique);
+
+		mntmDocumentPapier = new JMenuItem("Document papier...");
+		mnNouveau.add(mntmDocumentPapier);
+
+		JMenu mnMotClefs = new JMenu("Mot clefs");
+		menuBar.add(mnMotClefs);
+
+		mntmNouvelleCatgorieDe = new JMenuItem("Nouvelle catégorie de mot clef...");
+		mnMotClefs.add(mntmNouvelleCatgorieDe);
+
+		mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
+		mnMotClefs.add(mntmNouveauMotClef);
+
+		JMenu mnCritres = new JMenu("Critères");
+		menuBar.add(mnCritres);
+
+		mntmAjouterUnCritre = new JMenuItem("Ajouter un critère...");
+		mnCritres.add(mntmAjouterUnCritre);
+
+		//Listeners
+		mntmQuitter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				finish();
+			}
+		});
+
 		mntmNouveau.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String nomDomaine = JOptionPane.showInputDialog("Veuillez indiquer le nom du domaine :");
@@ -382,79 +354,7 @@ public class MainWindow {
 				updateFrameContent();
 			}
 		});
-		mntmNouveau.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
-		mnDomaine.add(mntmNouveau);
 
-		JSeparator separator = new JSeparator();
-		mnDomaine.add(separator);
-
-		JMenuItem mntmQuitter = new JMenuItem("Quitter");
-		mntmQuitter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				finish();
-			}
-		});
-		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
-		mnDomaine.add(mntmQuitter);
-
-		JMenu mnFichiers = new JMenu("Fichiers");
-		menuBar.add(mnFichiers);
-
-		JMenu mnNouveau = new JMenu("Nouveau");
-		mnFichiers.add(mnNouveau);
-
-		JMenuItem mntmDocumentElectronique = new JMenuItem("Document electronique...");
-		mntmDocumentElectronique.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!canMakeDocument()) {
-					return;
-				}
-				NewElectronicDocumentDialog nfd = new NewElectronicDocumentDialog(domaine);
-				nfd.setVisible(true);
-				if (nfd.getResult() == FileDialogResultEnum.ok) {
-					updateFileList();
-				}
-			}
-		});
-		mnNouveau.add(mntmDocumentElectronique);
-
-		JMenuItem mntmDocumentPapier = new JMenuItem("Document papier...");
-		mntmDocumentPapier.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!canMakeDocument()) {
-					return;
-				}
-				NewPaperDocumentDialog npd = new NewPaperDocumentDialog(domaine);
-				npd.setVisible(true);
-				if (npd.getResult() == FileDialogResultEnum.ok){
-					updateFileList();
-				}
-			}
-		});
-		mnNouveau.add(mntmDocumentPapier);
-
-		JMenu mnMotClefs = new JMenu("Mot clefs");
-		menuBar.add(mnMotClefs);
-
-		JMenuItem mntmNouvelleCatgorieDe = new JMenuItem("Nouvelle catégorie de mot clef...");
-		mntmNouvelleCatgorieDe.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!domaineExists()) {
-					return;
-				}
-				String catMotClef = JOptionPane.showInputDialog("Veuillez indiquer le nom de la catégorie de mot clef :");
-				if (catMotClef.equals("")) {
-					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, la catégorie ne sera PAS créé.");
-					return;
-				}
-				domaine.addCategorieMotClef(catMotClef);
-				updateMotClefCatList();
-				saveDomain();
-			}
-		});
-		mnMotClefs.add(mntmNouvelleCatgorieDe);
-
-		JMenuItem mntmNouveauMotClef = new JMenuItem("Nouveau mot clef...");
 		mntmNouveauMotClef.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!domaineExists()) {
@@ -472,12 +372,7 @@ public class MainWindow {
 				}
 			}
 		});
-		mnMotClefs.add(mntmNouveauMotClef);
 
-		JMenu mnCritres = new JMenu("Critères");
-		menuBar.add(mnCritres);
-
-		JMenuItem mntmAjouterUnCritre = new JMenuItem("Ajouter un critère...");
 		mntmAjouterUnCritre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!domaineExists()) {
@@ -492,14 +387,158 @@ public class MainWindow {
 				updateCritereList(true);
 			}
 		});
-		mnCritres.add(mntmAjouterUnCritre);
 
-		ready = true;
-		try {
-			domainesComboBox.setSelectedIndex(0);
-		} catch (IllegalArgumentException e) {
-			//Rien, juste pour attraper l'exception
-		}
+		mntmNouvelleCatgorieDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!domaineExists()) {
+					return;
+				}
+				String catMotClef = JOptionPane.showInputDialog("Veuillez indiquer le nom de la catégorie de mot clef :");
+				if (catMotClef.equals("")) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Aucun nom saisi, la catégorie ne sera PAS créé.");
+					return;
+				}
+				domaine.addCategorieMotClef(catMotClef);
+				updateMotClefCatList();
+				saveDomain();
+			}
+		});
+
+		mntmDocumentPapier.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!canMakeDocument()) {
+					return;
+				}
+				NewPaperDocumentDialog npd = new NewPaperDocumentDialog(domaine);
+				npd.setVisible(true);
+				if (npd.getResult() == FileDialogResultEnum.ok){
+					updateFileList();
+				}
+			}
+		});
+
+		mntmDocumentElectronique.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (!canMakeDocument()) {
+					return;
+				}
+				NewElectronicDocumentDialog nfd = new NewElectronicDocumentDialog(domaine);
+				nfd.setVisible(true);
+				if (nfd.getResult() == FileDialogResultEnum.ok) {
+					updateFileList();
+				}
+			}
+		});
+	}
+
+	private void addEvents() {
+		frmDocumentmanager.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosed(java.awt.event.WindowEvent evt){
+				finish();
+			}
+		});
+		
+		listeCriteres.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JList source = (JList) arg0.getSource();
+				if (arg0.getClickCount() != 2 || source.getSelectedValue() == null) {
+					return;
+				}
+				((CritereListModel) source.getModel()).removeItem((Critere) source.getSelectedValue());
+				updateFileList();
+			}
+		});
+		
+		listeMots.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				JList source = (JList) arg0.getSource();
+				if (source.getSelectedValue() == null || arg0.getClickCount() != 2) {
+					return;
+				}
+				((MotClefListModel) source.getModel()).delete((MotClef) source.getSelectedValue());
+				updateFileList();
+			}
+		});
+		
+		motClefCatList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JComboBox motClefCatList = (JComboBox) arg0.getSource();
+				if (motClefCatList.getSelectedItem() == null) {
+					return;
+				}
+				try {
+					motClefList.setModel(new MotClefListModel(((CategorieMotClef) motClefCatList.getSelectedItem()).getMotClefs()));
+				} catch (ClassCastException e) {
+					System.err.println("Etonnant : Des objets ne se cast pas comme il faudrait !");
+				}
+				try {
+					motClefList.setSelectedIndex(0);
+				} catch (IllegalArgumentException e) {
+					System.err.println("Liste de mot clefs vide.");
+				}
+			}
+		});
+		
+		critereBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (critereList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un critère.");
+					return;
+				}
+
+				try {
+					((CritereListModel) listeCriteres.getModel()).addItem((Critere) critereList.getSelectedItem());
+				} catch (CloneNotSupportedException e) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,e.getMessage());
+					return;
+				}
+				updateFileList();
+			}
+		});
+		
+		motClefBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (motClefCatList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer une catégorie de mot clef.");
+					return;
+				}
+				if (motClefList.getSelectedItem() == null) {
+					javax.swing.JOptionPane.showMessageDialog(MainWindow.this.frmDocumentmanager,"Vous devez créer un mot clef pour cette catégorie.");
+					return;
+				}
+				((MotClefListModel) listeMots.getModel()).add((MotClef) motClefList.getSelectedItem());
+				updateFileList();
+			}
+		});
+
+		listeFichiers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				JList list = (JList)evt.getSource();
+				if (evt.getClickCount() != 2 || list.getSelectedValue() == null) {
+					return;
+				}
+				EditDocumentDialog efd = new EditDocumentDialog((Document) list.getSelectedValue(), domaine);
+				efd.setVisible(true);
+			}
+		});
+
+		domainesComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JComboBox cb = (JComboBox)arg0.getSource();
+				String domaine_selection = (String)cb.getSelectedItem();
+				if (domaine != null) {
+					saveDomain();
+				}
+				if (ready && domaine_selection != null) {
+					loadDomain(domaine_selection);
+				}
+			}
+		});
+
+
 	}
 
 	protected void updateMotClefCatList() {
@@ -535,7 +574,7 @@ public class MainWindow {
 		MotClefListModel motsModel = (MotClefListModel) listeMots.getModel();
 		if (criteresModel.getSize() != 0 || motsModel.getSize() != 0) {
 			ArrayList<Document> documents = new ArrayList<Document>();
-			
+
 			//Créer la liste de documents
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
 				for (MotClef m : c.getMotClefs()) {
@@ -546,7 +585,7 @@ public class MainWindow {
 					}
 				}
 			}
-			
+
 			trierDocuments(documents, criteresModel.getCriteres(), motsModel.getMotClefs(), flm);
 		} else {
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
@@ -567,13 +606,13 @@ public class MainWindow {
 	private void trierDocuments(ArrayList<Document> documents,
 			ArrayList<Critere> criteres, ArrayList<MotClef> motClefs,
 			FileListModel flm) {
-		
+
 		for (Document d : documents) {
 			if (d.matches(criteres, motClefs)) {
 				flm.add(d);
 			}
 		}
-		
+
 	}
 
 	private void loadDomain(String domaine_selection) {
@@ -637,12 +676,12 @@ public class MainWindow {
 	public JComboBox getComboBox_1() {
 		return critereList;
 	}
-	
+
 	private boolean canMakeDocument() {
-		 if (!domaineExists()) {
-			 return false;
-		 }
-		
+		if (!domaineExists()) {
+			return false;
+		}
+
 		if (domaine.getCategoriesMotClef().size() > 0) {
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
 				if (c.getMotClefs().size() > 0) {
