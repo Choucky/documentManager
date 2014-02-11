@@ -56,4 +56,23 @@ public abstract class Document implements Serializable{
 		motClefs.remove(mot);
 	}
 	
+	public boolean matches(ArrayList<Critere> criteres, ArrayList<MotClef> mots) {
+		//Critères
+		ArrayList<Critere> criteresDocument = new ArrayList<Critere>();
+		for (Note n : notes) {
+			if (!criteresDocument.contains(n.getCritere())) {
+				criteresDocument.add(n.getCritere());
+			}
+		}
+		
+		for (Critere c : criteres) {
+			if (!criteresDocument.contains(c)) {
+				return false;
+			}
+		}
+		
+		
+		return true;
+	}
+	
 }

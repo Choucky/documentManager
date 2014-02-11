@@ -534,26 +534,20 @@ public class MainWindow {
 		CritereListModel criteresModel = (CritereListModel) listeCriteres.getModel();
 		MotClefListModel motsModel = (MotClefListModel) listeMots.getModel();
 		if (criteresModel.getSize() != 0 || motsModel.getSize() != 0) {
-			//Critères
+			ArrayList<Document> documents = new ArrayList<Document>();
+			
+			//Créer la liste de documents
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
 				for (MotClef m : c.getMotClefs()) {
 					for (Document d : m.getDocuments()) {
-						for (Critere cr : criteresModel.getCriteres()) {
-							if (d.findNoteOf(cr) != null) {
-								flm.add(d);
-							}
+						if (!documents.contains(d)) {
+							documents.add(d);
 						}
 					}
 				}
 			}
 			
-			//Mot clefs
-			for (MotClef m : motsModel.getMotClefs()) {
-				for (Document d : m.getDocuments()) {
-					flm.add(d);
-				}
-			}
-			
+			trierDocuments(documents, criteresModel.getCriteres(), motsModel.getMotClefs(), flm);
 		} else {
 			for (CategorieMotClef c : domaine.getCategoriesMotClef()) {
 				for (MotClef m : c.getMotClefs()) {
@@ -568,6 +562,18 @@ public class MainWindow {
 			}
 		}
 		listeFichiers.repaint();
+	}
+
+	private void trierDocuments(ArrayList<Document> documents,
+			ArrayList<Critere> criteres, ArrayList<MotClef> motClefs,
+			FileListModel flm) {
+		
+		for (Document d : documents) {
+			if (d.matches(criteres, motClefs)) {
+				flm.add(d);
+			}
+		}
+		
 	}
 
 	private void loadDomain(String domaine_selection) {
