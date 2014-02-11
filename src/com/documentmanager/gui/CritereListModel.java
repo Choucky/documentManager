@@ -13,7 +13,7 @@ public class CritereListModel extends AbstractListModel implements ComboBoxModel
 	private Object selection;
 	
 	public CritereListModel() {
-		criteres = new ArrayList<>();
+		criteres = new ArrayList<Critere>();
 	}
 	
 	public CritereListModel(ArrayList<Critere> criteres) {
