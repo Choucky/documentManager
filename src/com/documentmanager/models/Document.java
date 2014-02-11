@@ -71,6 +71,12 @@ public abstract class Document implements Serializable{
 			}
 		}
 		
+		//Mots clefs
+		for (MotClef m : mots) {
+			if (!motClefs.contains(m)) {
+				return false;
+			}
+		}
 		
 		return true;
 	}
